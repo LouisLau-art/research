@@ -1,0 +1,289 @@
+Research on Routing Algorithm Based
+on Node Occupancy and Buffer
+Management in Opportunistic Networks
+
+Xin Hu
+Supervisor: Jianqun Cui
+
+This thesis is submitted for the degree of
+Master of Engineering
+
+Central China Normal University Wollongong Joint Institute
+Central China Normal University
+May 2024
+
+Declaration
+I hereby declare that except where specific reference is made to the work of others, the
+contents of this thesis are original and have not been submitted in whole or in part for
+consideration for any other degree or qualification in this, or any other university. This thesis
+is my own work and contains nothing which is the outcome of work done in collaboration
+with others, except as specified in the text and Acknowledgments.
+
+Xin Hu
+May 2024
+
+Abstract
+Opportunistic network are a new communication model that does not require a fixed endto-end path between source and destination nodes. The "store-carry-forward" communication
+model adopted by opportunistic networks allows the network to communicate even in
+disconnected subregions, reducing problems such as communication interruptions caused
+by intermittent network connections. Opportunity networks therefore have a significant
+advantage in situations involving the absence of a complete end-to-end communication path.
+Opportunistic networks can have a wide range of applications and advantages in many areas,
+including handheld device networking, remote area communication, vehicular networks, and
+wildlife tracking. However, high latency, intermittent connectivity, and resource limitation
+are characteristics of opportunistic networks, so it is crucial to create effective and practical
+opportunistic network routing algorithms. this thesis analyses the latest research results of
+domestic and international researchers on routing algorithms for opportunistic networks and
+proposes the research content of this thesis to address the shortcomings of current routing
+algorithms for opportunistic networks.
+Considering the importance of node occupancy as well as buffer management for successful message delivery, this thesis improves the Spray and Wait algorithm and proposes
+a Spray and Wait algorithm based on node occupancy and buffer management (NOMSW).
+The main work is as follows:
+1. The NOMSW algorithm improves on the node delivery predictability formula by
+utilizing the node residual buffer rate as an indicator of the update as well as decay
+phases. In the waiting phase, the NOMSW algorithm integrates the effects of the
+node’s residual buffer rate and the node delivery predictability on the message replica
+allocation. It adjusts the initial maximum number of message replicas of the source
+node based on the residual buffer rate of the node, and allocates the number of message
+replicas of the relay node according to the ratio of the node delivery predictability. In
+the waiting phase, the algorithm introduces the concept of node delivery discrimination
+to avoid blind delivery of messages between nodes with similar delivery predictability.
+
+iv
+2. The NOMSW algorithm proposes a buffer management strategy for the large number
+of redundant messages existing in the network. The strategy mainly consists of two key
+parts: first, using the ACK acknowledgment mechanism to delete messages that have
+been successfully delivered to their destinations; second, judging and deleting the less
+reliable redundant messages in the node buffer based on the number of node message
+copies, node delivery predictability, and discrimination of delivery predictability.
+3. Using ONE simulation platform, we conducted simulation experiments on the NOMSW
+algorithm, AdaptiveSpray algorithm, and Spray and Wait algorithm. In the simulation
+experiments, we mainly considered the effects of different factors on the performance
+of the algorithms, such as buffer size, message lifetime (TTL), simulation time, and
+message generation interval. The experimental results show that the NOMSW algorithm exhibits good performance in terms of increasing the message delivery rate,
+reducing the average overhead, and reducing the network delay.
+Keywords: Opportunistic Networks, Spray and Wait Routing Algorithm, Node Occupancy,
+Buffer Management Strategy
+
+摘要
+机会网络是一种不需要源节点和目的节点之间有固定端到端路径的新型通信模
+型。由于机会网络采用了“存储-携带-转发”的通信模式，允许网络在不连通的子区
+域也可以实现通信，减少了因网络间歇性连接带来的通信中断等问题。因此在涉及
+没有完整端到端通信路径的情况下，机会网络具有明显优势。在许多领域，包括手
+持设备组网、偏远地区通信、车载网络和野生动物追踪等，机会网络都具有广泛的
+应用价值和优势。然而，机会网络具有高延迟、间歇性连接和资源受限等特点，因
+此创建有效实用的机会网络路由算法至关重要。本文分析了国内外研究人员在机会
+网络路由算法方面的最新研究成果，并针对当前机会网络路由算法的不足提出了本
+文的研究内容。
+考虑到节点占用以及缓存管理对消息成功传输的重要性，本文对喷射与等待算
+法进行了改进，提出了基于节点占用与缓存管理的喷射等待算法（NOMSW)。主要
+工作如下：
+1. NOMSW算法利用节点剩余缓存率作为更新以及衰减阶段的指标，对节点投递
+预测值公式进行了改进。在喷射阶段，NOMSW算法综合考虑了节点的剩余缓
+存率和节点投递预测值对消息副本分配的影响。它根据节点的剩余缓存率来调
+整源节点的初始最大消息副本数量，并根据节点投递预测值的比例来分配中继
+节点的消息副本数量。在等待阶段，该算法引入了节点投递区分度的概念，以
+避免消息在投递预测值相似的节点之间盲目传递。
+2. 针对网络中存在的大量冗余消息，NOMSW算法提出了一项缓存管理策略。该
+策略主要包括两个关键部分：一是利用ACK确认机制删除已成功投递到目的
+地的消息；二是根据节点消息副本数，节点投递预测值以及节点投递区分度，
+判断并删除节点缓存中可靠性较低的冗余信息。
+3. 采用ONE仿真平台，对NOMSW算法、AdaptiveSpray算法和Spray and Wait算
+法进行了仿真实验。在仿真实验中，作者主要考虑了缓存大小、消息生存周
+期、仿真时间以及消息产生间隔等不同因素对算法性能的影响。实验结果显
+示，NOMSW算法在提高消息投递率、降低平均开销以及减少网络时延等方面
+表现出良好的性能。
+
+vi
+关键词: 机会网络, 喷射与等待路由算法, 节点占用, 缓存管理策略
+
+Acknowledgments
+Time flies, and years pass by swiftly. In the blink of an eye, two years are about to come
+to an end, marking the farewell to my student days as graduation approaches.
+First，I would like to express my sincere gratitude to myself for the dedication and hard
+work throughout my academic journey. As a student from a different academic background,
+I have strived to fill the gaps in knowledge and enhance my skills during my two years of
+graduate study. Without my own relentless efforts and determination, I would not have been
+able to achieve my academic goals.
+Second, I am also indebted to my supervisor Jianqun Cui and the faculty members
+of [Joint Institute] for their invaluable guidance and mentorship. Their insightful advice
+and encouragement have played a pivotal role in shaping my academic and professional
+development.
+Third, I am deeply thankful to my family for their unwavering support and encouragement. Their belief in me has been a constant source of motivation, enabling me to focus
+wholeheartedly on my studies and academic pursuits.
+Last but not least, I would like to extend my heartfelt appreciation to my friends for their
+companionship and support throughout this journey. Their encouragement and camaraderie
+have made the challenges more manageable and the successes more meaningful.
+This work was supported in part by the National Natural Science Foundation of China
+under Grant 6227272189.
+
+Table of Contents
+List of Figures
+
+x
+
+List of Tables
+
+xi
+
+1
+
+Introduction
+1.1 Research background and significance . . . . . . . . . . . . . . . . . . . .
+1.2 Research status . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.1 Classical routing algorithms . . . . . . . . . . . . . . . . . . . . .
+1.2.2 Improvement of classical routing algorithms . . . . . . . . . . . . .
+1.3 Research objectives and research content . . . . . . . . . . . . . . . . . .
+1.3.1 Research objectives . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3.2 Research content . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4 Article structure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+1
+1
+3
+4
+5
+9
+9
+9
+11
+
+2
+
+Related works
+2.1 Overview of opportunistic networks . . . . . . . . . . . . . . . . . . . . .
+2.1.1 Characteristics of opportunistic networks . . . . . . . . . . . . . .
+2.1.2 Architecture of opportunistic networks . . . . . . . . . . . . . . . .
+2.2 Classification of opportunistic routing . . . . . . . . . . . . . . . . . . . .
+2.2.1 Routing without infrastructure . . . . . . . . . . . . . . . . . . . .
+2.2.2 Routing with infrastructure . . . . . . . . . . . . . . . . . . . . . .
+2.3 Evaluation metrics of opportunistic networks . . . . . . . . . . . . . . . .
+2.4 The ONE simulation platform . . . . . . . . . . . . . . . . . . . . . . . .
+2.5 Summary of this chapter . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+13
+13
+14
+15
+16
+17
+19
+20
+21
+23
+
+3
+
+Routing algorithm based on node occupancy and buffer management
+3.1 Problem description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2 Problem modelling . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3 Algorithm design . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+25
+25
+27
+29
+
+Table of Contents
+
+ix
+
+3.3.1 Spray phase . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3.2 Wait phase . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3.3 Buffer management strategy . . . . . . . . . . . . . . . . . . . . .
+Summary of this chapter . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+31
+35
+37
+42
+
+4
+
+Simulation experiments
+4.1 Simulation experiment setting . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.1 Simulation experiment objectives . . . . . . . . . . . . . . . . . .
+4.1.2 Simulation data setting . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.3 Introduction to the comparison algorithm . . . . . . . . . . . . . .
+4.1.4 Simulation experiment process . . . . . . . . . . . . . . . . . . . .
+4.2 Simulation experiment results . . . . . . . . . . . . . . . . . . . . . . . .
+4.2.1 Impact of buffer size on algorithm performance . . . . . . . . . . .
+4.2.2 Impact of time to live on algorithm performance . . . . . . . . . .
+4.2.3 Impact of simulation time on algorithm performance . . . . . . . .
+4.2.4 Impact of message generation interval on algorithm performance . .
+4.3 Summary of this chapter . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+43
+43
+43
+44
+45
+46
+47
+47
+49
+51
+53
+55
+
+5
+
+Conclusions and Outlooks
+5.1 Conclusions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.2 Outlooks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+57
+57
+59
+
+3.4
+
+References
+
+60
+
+Appendix
+
+65
+
+List of Figures
+2.1
+2.2
+2.3
+2.4
+
+Illustration of data forwarding process . . . . . . . . . . . . . . . . . . . .
+Structure of opportunistic networks . . . . . . . . . . . . . . . . . . . . . .
+Classification of opportunistic routing . . . . . . . . . . . . . . . . . . . .
+GUI mode view . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+14
+15
+17
+22
+
+3.1
+3.2
+
+Flow chart of NOMSW . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+ACK mechanism . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+30
+38
+
+4.1
+4.2
+4.3
+4.4
+
+Impact of buffer size on algorithm performance . . . . . . . . . . . . . . .
+Impact of TTL on algorithm performance . . . . . . . . . . . . . . . . . .
+Impact of simulation time on algorithm performance . . . . . . . . . . . .
+Impact of message generation interval on algorithm performance . . . . . .
+
+47
+50
+52
+54
+
+

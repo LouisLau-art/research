@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于网络表示学习与节点结构相似度的社交网络链路预测研究 - 开题报告演示</title>
+    <style>
+        /* Modern CSS resets & variables for Elegant Academic Light Theme with COLOSSAL fonts */
+        :root {
+            --bg-color: #f3f5f9;
+            --panel-bg: #ffffff;
+            --panel-border: rgba(99, 102, 241, 0.2);
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --accent: #d97706;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --neon-blue: #1d4ed8;
+            --neon-purple: #6d28d9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Colossal Slide Container & Individual Slides - Enlarged display area */
+        #deck {
+            position: relative;
+            width: 100%;
+            max-width: 1380px; /* Expanded from 1280px */
+            height: 100%;
+            max-height: 820px; /* Expanded from 720px */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+            padding: 40px 65px; /* Comfortable padding for colossal layout */
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(0, 0, -100px) rotateX(10deg);
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate3d(0, 0, 0) rotateX(0deg);
+            z-index: 10;
+        }
+
+        /* Slide Headers - Colossal Title */
+        .slide-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+            padding-bottom: 18px;
+        }
+
+        .slide-header .accent-bar {
+            width: 8px;
+            height: 48px;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+            border-radius: 4px;
+            margin-right: 22px;
+        }
+
+        .slide-header h2 {
+            font-size: 48px; /* Giant Title font size */
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .slide-header .slide-number {
+            margin-left: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--primary);
+            opacity: 0.9;
+        }
+
+        /* General Layout Helpers */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            flex-grow: 1;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            flex-grow: 1;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border: 1.5px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 8px 24px rgba(148, 163, 184, 0.12);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .card-title {
+            font-size: 30px; /* Colossal card titles */
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title.accented {
+            color: var(--accent);
+        }
+
+        .card-content {
+            font-size: 24px; /* Colossal body text for maximum remote visibility */
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .card-content p {
+            margin-bottom: 15px;
+        }
+
+        .card-content ul {
+            margin-left: 28px;
+        }
+
+        .card-content li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Slide 1: Cover Styles */
+        .cover-slide {
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 110px;
+            background: linear-gradient(135deg, #ffffff 0%, #f3f5f9 100%) !important;
+        }
+
+        .cover-title {
+            font-size: 62px; /* Grand title */
+            font-weight: 800;
+            line-height: 1.4;
+            background: linear-gradient(135deg, var(--text-main) 40%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .cover-subtitle {
+            font-size: 34px; /* Grand subtitle */
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            letter-spacing: 3px;
+        }
+
+        .cover-divider {
+            width: 300px;
+            height: 7px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 4px;
+            margin-bottom: 45px;
+        }
+
+        .cover-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 60px;
+            max-width: 1100px;
+        }
+
+        .meta-item {
+            font-size: 24px; /* Giant cover meta info */
+            color: var(--text-muted);
+        }
+
+        .meta-item strong {
+            color: var(--text-main);
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        /* Slide 2: TOC Grid List */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--panel-bg);
+            border: 1.5px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 22px 35px;
+            box-shadow: 0 4px 15px rgba(148, 163, 184, 0.08);
+        }
+
+        .toc-number {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 46px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 35px;
+        }
+
+        .toc-text h3 {
+            font-size: 28px; /* Giant TOC items */
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .toc-text p {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Slide 7: Flowchart styles */
+        .flowchart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 10px 0;
+        }
+
+        .flowchart-step {
+            background-color: var(--panel-bg);
+            border: 1.5px solid var(--panel-border);
+            border-radius: 14px;
+            width: 225px;
+            height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(148, 163, 184, 0.15);
+        }
+
+        .flowchart-step span {
+            font-size: 18px;
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .flowchart-step strong {
+            font-size: 20px;
+            color: var(--text-main);
+        }
+
+        .flowchart-arrow {
+            color: var(--primary);
+            font-size: 42px; /* Enlarged flow arrows */
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: translateX(-2px); }
+            50% { opacity: 1; transform: translateX(2px); }
+            100% { opacity: 0.4; transform: translateX(-2px); }
+        }
+
+        .formula-box {
+            background-color: #f1f5f9;
+            border: 1.5px dashed var(--primary);
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #1e3a8a;
+            font-size: 26px; /* High-visibility colossal formulas */
+            margin: 15px 0;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        /* Slide 9: Alternating Timeline axis styles */
+        .timeline-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 480px;
+            margin-top: 25px;
+        }
+
+        .timeline-axis {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            top: 50%;
+            transform: translateY(-3px);
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        .timeline-items {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .timeline-item {
+            width: 195px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-node {
+            width: 26px;
+            height: 26px;
+            background-color: var(--accent);
+            border: 6px solid var(--bg-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-13px);
+            box-shadow: 0 0 10px rgba(217, 119, 6, 0.4);
+        }
+
+        .timeline-card {
+            background-color: var(--panel-bg);
+            border: 1.5px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 18px;
+            width: 100%;
+            box-shadow: 0 6px 18px rgba(148, 163, 184, 0.15);
+            text-align: center;
+        }
+
+        .timeline-item.up .timeline-card {
+            margin-bottom: 250px;
+        }
+
+        .timeline-item.down .timeline-card {
+            margin-top: 250px;
+        }
+
+        .timeline-card h4 {
+            font-size: 16px;
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .timeline-card p {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* Slide 10: Horizontal Novelty lists */
+        .novelty-row {
+            display: flex;
+            align-items: stretch;
+            gap: 30px;
+            background-color: var(--panel-bg);
+            border: 1.5px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 22px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(148, 163, 184, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .novelty-row:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.12);
+        }
+
+        .novelty-badge {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(79, 70, 229, 0.08);
+            border-radius: 12px;
+            width: 65px;
+            height: 65px;
+            flex-shrink: 0;
+            border: 1.5px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .novelty-body h4 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .novelty-body p {
+            font-size: 19px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        /* Backup Slides Table formatting */
+        .backup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 21px; /* Giant table text */
+        }
+
+        .backup-table th {
+            background-color: rgba(79, 70, 229, 0.08);
+            border: 1.5px solid var(--panel-border);
+            color: var(--primary);
+            padding: 15px 20px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .backup-table td {
+            border: 1.5px solid var(--panel-border);
+            padding: 15px 20px;
+            line-height: 1.6;
+        }
+
+        .backup-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        /* Slide Controls Overlay */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn-control {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .btn-control:hover {
+            background-color: var(--primary);
+            border-color: var(--primary-light);
+            color: #ffffff;
+            transform: scale(1.08);
+        }
+
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-color: rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .keyboard-tip {
+            font-size: 15px;
+            color: var(--text-muted);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Slide 12: Elegant Central Thankyou */
+        .thankyou-card {
+            text-align: center;
+            margin: auto;
+            max-width: 900px;
+            padding: 60px 50px;
+            border-color: var(--primary);
+        }
+
+        .thankyou-card h1 {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .thankyou-card p {
+            font-size: 26px;
+            color: var(--text-main);
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .thankyou-card .sub-meta {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-top: 35px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Print Media Queries for Landscape PDF Generation */
+        @media print {
+            body {
+                background-color: var(--bg-color) !important;
+                color: var(--text-main) !important;
+                overflow: visible;
+                height: auto;
+            }
+
+            #deck {
+                max-width: 100%;
+                height: auto;
+                max-height: none;
+                perspective: none;
+                display: block;
+            }
+
+            .slide {
+                position: relative;
+                opacity: 1 !important;
+                transform: none !important;
+                pointer-events: auto !important;
+                width: 100% !important;
+                height: 100vh !important;
+                page-break-after: always;
+                border: none !important;
+                box-shadow: none !important;
+                background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%) !important;
+                color: var(--text-main) !important;
+                border-radius: 0 !important;
+                padding: 40px 65px !important;
+                display: flex !important;
+            }
+
+            .slide-header h2 {
+                color: var(--text-main) !important;
+                font-size: 48px !important;
+            }
+
+            .card {
+                background-color: var(--panel-bg) !important;
+                border: 1.5px solid var(--panel-border) !important;
+                box-shadow: none !important;
+                color: var(--text-main) !important;
+            }
+
+            .card-title {
+                color: var(--primary) !important;
+                font-size: 30px !important;
+            }
+
+            .card-content {
+                color: var(--text-main) !important;
+                font-size: 24px !important;
+            }
+
+            .formula-box {
+                background-color: #f1f5f9 !important;
+                border-color: var(--primary) !important;
+                color: #1e3a8a !important;
+                font-size: 26px !important;
+            }
+
+            .timeline-card {
+                background-color: var(--panel-bg) !important;
+                border-color: var(--panel-border) !important;
+                box-shadow: none !important;
+            }
+
+            .timeline-card p {
+                color: var(--text-main) !important;
+                font-size: 15px !important;
+            }
+
+            .flowchart-step {
+                background-color: var(--panel-bg) !important;
+                border-color: var(--panel-border) !important;
+                box-shadow: none !important;
+            }
+
+            .flowchart-step strong {
+                color: var(--text-main) !important;
+                font-size: 20px !important;
+            }
+
+            .novelty-row {
+                background-color: var(--panel-bg) !important;
+                border-color: var(--panel-border) !important;
+                color: var(--text-main) !important;
+            }
+
+            .novelty-body h4 {
+                color: var(--text-main) !important;
+                font-size: 24px !important;
+            }
+
+            .novelty-body p {
+                color: var(--text-muted) !important;
+                font-size: 19px !important;
+            }
+
+            .cover-title {
+                background: linear-gradient(135deg, var(--text-main) 40%, var(--primary) 100%) !important;
+                -webkit-background-clip: text !important;
+                -webkit-text-fill-color: transparent !important;
+                color: var(--text-main) !important;
+                font-size: 62px !important;
+            }
+
+            .cover-subtitle {
+                color: var(--text-muted) !important;
+                font-size: 34px !important;
+            }
+
+            .meta-item strong {
+                color: var(--text-main) !important;
+                font-size: 24px !important;
+            }
+
+            .controls, .keyboard-tip, .progress-bar-container {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="deck">
+
+        <!-- Slide 1: Cover -->
+        <div class="slide cover-slide active">
+            <h1 class="cover-title">基于网络表示学习与节点结构相似度的<br>社交网络链路预测研究</h1>
+            <p class="cover-subtitle">硕士研究生毕业论文开题报告</p>
+            <div class="cover-divider"></div>
+            <div class="cover-meta">
+                <div class="meta-item">汇报人: <strong>刘新宇</strong></div>
+                <div class="meta-item">学号: <strong>2025124630 (CCNU) / 1086182 (UOW)</strong></div>
+                <div class="meta-item">专 业: <strong>计算机科学 (Computer Science)</strong></div>
+                <div class="meta-item">导 师: <strong>崔建群 教授</strong></div>
+                <div class="meta-item">单 位: <strong>华中师范大学伍伦贡联合研究院</strong></div>
+                <div class="meta-item">日 期: <strong>2026年7月</strong></div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Table of Contents -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>目录</h2>
+                <div class="slide-number">02</div>
+            </div>
+            <div class="toc-grid">
+                <div class="toc-item">
+                    <div class="toc-number">01</div>
+                    <div class="toc-text">
+                        <h3>研究背景与问题</h3>
+                        <p>Background & Problem</p>
+                    </div>
+                </div>
+                <div class="toc-item">
+                    <div class="toc-number">02</div>
+                    <div class="toc-text">
+                        <h3>研究意义与价值</h3>
+                        <p>Significance & Value</p>
+                    </div>
+                </div>
+                <div class="toc-item">
+                    <div class="toc-number">03</div>
+                    <div class="toc-text">
+                        <h3>国内外研究现状分析</h3>
+                        <p>Literature Review</p>
+                    </div>
+                </div>
+                <div class="toc-item">
+                    <div class="toc-number">04</div>
+                    <div class="toc-text">
+                        <h3>研究目标与主要内容</h3>
+                        <p>Objectives & Contents</p>
+                    </div>
+                </div>
+                <div class="toc-item">
+                    <div class="toc-number">05</div>
+                    <div class="toc-text">
+                        <h3>关键技术与实施方案</h3>
+                        <p>Methodology & Pipeline</p>
+                    </div>
+                </div>
+                <div class="toc-item">
+                    <div class="toc-number">06</div>
+                    <div class="toc-text">
+                        <h3>研究计划与创新点</h3>
+                        <p>Timeline & Novelties</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Research Background & Problems -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>研究背景与核心问题</h2>
+                <div class="slide-number">03</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">📈 行业背景与定义</div>
+                    <div class="card-content">
+                        <p><strong>社交网络的兴起：</strong>以微信、微博、Facebook等服务为代表的社交圈中，蕴含着数以亿计的拓扑与连接关系。</p>
+                        <p><strong>什么是链路预测：</strong>利用已知的网络结构，预测尚未连接的两个节点在未来产生社交关联的可能性（例如可能认识的人）。</p>
+                        <p><strong>结构稀疏性：</strong>实际网络连接极度稀疏，仅有千分之几工程连接被观测，增加了预测难度。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title accented">🎯 核心待解决挑战</div>
+                    <div class="card-content">
+                        <p><span class="highlight-text">1. 均匀随机游走的盲目性：</span> 原版 DeepWalk 游走在每个邻居之间的概率完全均等，忽略了不同好友之间的社交紧密性差异。</p>
+                        <p><span class="highlight-text">2. 结构相似度与高阶嵌入的失衡：</span> 业界缺乏一种数学理论机制，将一阶的静态相似度指标（如 Jaccard）无缝融入高阶网络表示学习中。</p>
+                        <p><span class="highlight-text">3. 硬件友好与低算力瓶颈：</span> 摆脱大型深度神经网络对庞大显存 GPU 的依赖，在普通 CPU 上几秒内输出精确结果。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Significance -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>研究意义与应用价值</h2>
+                <div class="slide-number">04</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">📚 理论意义</div>
+                    <div class="card-content">
+                        <p><strong>融合经典拓扑与网络表示学习：</strong>桥接了以往两个相互分裂的方法论，用邻域相似性作为图表示探索的先验引导。</p>
+                        <p><strong>提出概率调控平滑模型：</strong>建立起一套包含调节因子的转移概率，让全局结构探索和局部社区开发可调、可解释。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title accented">💻 实际应用价值</div>
+                    <div class="card-content">
+                        <p><strong>社交好友精准推荐：</strong>提升社交平台“感兴趣的好友”推荐成功率，辅助社交链条的快速扩展与用户粘性。</p>
+                        <p><strong>生物医药研发：</strong>应用于蛋白质相互作用网络（PPI）中，快速锁定未被发掘的连接，缩短新药靶向筛选时长。</p>
+                        <p><strong>安全与反作弊：</strong>应用于学术网络中的合作关系异常检测，或金融作弊网络中黑色产业链的异常边关联预测。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Literature Review -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>国内外研究现状分析</h2>
+                <div class="slide-number">05</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">🔍 传统启发式链路预测方法</div>
+                    <div class="card-content">
+                        <p><strong>代表模型：</strong>Jaccard 系数、Common Neighbors、Adamic-Adar、Resource Allocation 指标等。</p>
+                        <p><strong>优点：</strong>计算简便，具有强大的物理解释性与极低的特征维度占用。</p>
+                        <p><strong>缺点：</strong>通常只考虑1跳或2跳的极其局部的结构细节，对未知稀疏长程链接的泛化极其脆弱。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title accented">🕸️ 网络表示学习方法</div>
+                    <div class="card-content">
+                        <p><strong>代表模型：</strong>DeepWalk (2014), Node2Vec (2016), LINE (2015) 等图嵌入学习模型。</p>
+                        <p><strong>优点：</strong>通过随机游走与 Skip-gram 自动挖掘多阶全局结构特征，表达力卓越。</p>
+                        <p><strong>缺点：</strong>均匀游走极易将walker随机带离至边缘节点，造成表示学习训练质量下降，丢失邻域紧密结构。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Objectives & Contents -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>研究目标与主要内容</h2>
+                <div class="slide-number">06</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1;">
+                <div class="card" style="border-color: var(--primary); padding: 18px 25px;">
+                    <div class="card-title" style="margin-bottom: 6px; font-size: 28px;">🎯 研究总体目标</div>
+                    <div class="card-content" style="font-size: 23px;">
+                        提出并实现一种基于 Jaccard 拓扑相似度加权转移概率的随机游走表示学习方法。通过平滑参数 β 平衡网络局部紧密度与全局搜索，提升链路预测准确率（AUC-ROC值），并在保证 CPU 轻量化运行的前提下超越现有基线。
+                    </div>
+                </div>
+                <div class="card" style="padding: 18px 25px;">
+                    <div class="card-title accented" style="margin-bottom: 12px; font-size: 28px;">📋 核心研究内容</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;">
+                            <li><strong>1. 相似度概率模型：</strong>结合无向图 Jaccard 相似度构建非均匀状态转移矩阵。</li>
+                            <li><strong>2. 加权游走与嵌入：</strong>产生偏向游走，使用 gensim Skip-gram 训练 128 维节点嵌入。</li>
+                            <li><strong>3. 特征分类与预测：</strong>提取边 Hadamard 乘积特征，利用逻辑回归分类器预测连边。</li>
+                            <li><strong>4. 对比验证与寻优：</strong>针对平滑参数 β 等进行多组消融分析，在公开数据集测试。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Methodology & Flowchart -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>关键技术与实施方案</h2>
+                <div class="slide-number">07</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1;">
+                <div class="card" style="padding: 15px 25px;">
+                    <div class="card-title" style="margin-bottom: 6px; font-size: 28px;">💡 核心创新算法：Jaccard 加权转移概率公式</div>
+                    <div class="formula-box">
+                        Jaccard(u, v) + &beta;
+P'(v | u) = ------------------------------------
+               &Sigma; [ Jaccard(u, w) + &beta; ]  (w &isin; N(u))
+                    </div>
+                    <div class="card-content" style="font-size: 22px; color: var(--text-muted);">
+                        当平滑因子 &beta; &rarr; &infin; 时，过渡为原始的均匀随机游走；当 &beta; &rarr; 0 时，游走将完全偏爱拓扑相似度最高的邻居（局部聚集开发）。
+                    </div>
+                </div>
+                
+                <div class="flowchart">
+                    <div class="flowchart-step">
+                        <span>STEP 01</span>
+                        <strong>网络图输入</strong>
+                    </div>
+                    <div class="flowchart-arrow">&rarr;</div>
+                    <div class="flowchart-step">
+                        <span>STEP 02</span>
+                        <strong>掩码测试连边</strong>
+                    </div>
+                    <div class="flowchart-arrow">&rarr;</div>
+                    <div class="flowchart-step">
+                        <span>STEP 03</span>
+                        <strong>Jaccard加权游走</strong>
+                    </div>
+                    <div class="flowchart-arrow">&rarr;</div>
+                    <div class="flowchart-step">
+                        <span>STEP 04</span>
+                        <strong>Skip-gram嵌入</strong>
+                    </div>
+                    <div class="flowchart-arrow">&rarr;</div>
+                    <div class="flowchart-step">
+                        <span>STEP 05</span>
+                        <strong>LR分类评估</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Experimental Design -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>实验设计与指标配置</h2>
+                <div class="slide-number">08</div>
+            </div>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-title">📊 数据集配置</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>Cora 文献网络：</strong> 2,708 点，5,429 边。</p>
+                        <p><strong>Citeseer 引用网络：</strong> 3,327 点，4,732 边。</p>
+                        <p><strong>Facebook 社交圈：</strong> 4,039 点，88,234 边。</p>
+                        <p style="margin-top: 10px; color: var(--accent); font-size: 18px;">※ 随机隐藏20%的真实连边作为正测试集，采样等量负样本。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title accented">🛠️ 对比基线算法</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>局部拓扑度量基线：</strong></p>
+                        <ul>
+                            <li>Jaccard Coefficient</li>
+                            <li>Adamic-Adar Index</li>
+                            <li>Common Neighbors</li>
+                        </ul>
+                        <p style="margin-top: 15px;"><strong>图表示学习基线：</strong></p>
+                        <ul>
+                            <li>Original DeepWalk (均匀游走)</li>
+                            <li>Node2Vec (探索控制游走)</li>
+                            <li>LINE (一二阶邻近度优化)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📈 评价指标与运行</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>主要评价指标：</strong></p>
+                        <p>AUC-ROC (反映分类器排序能力，越接近1越好)</p>
+                        <p style="margin-top: 10px;"><strong>辅助评测指标：</strong></p>
+                        <p>Average Precision (AP)</p>
+                        <p style="margin-top: 15px; color: var(--accent); font-size: 18px;">※ 独立重复实验10次取均值，排除随机偏移干扰。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Timeline -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>研究计划与时间安排</h2>
+                <div class="slide-number">09</div>
+            </div>
+            <div class="timeline-container">
+                <div class="timeline-axis"></div>
+                <div class="timeline-items">
+                    <div class="timeline-item up">
+                        <div class="timeline-card">
+                            <h4>2026.07 - 2026.08</h4>
+                            <p>掌握经典图嵌入库，完成文献调研与环境配置</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                    <div class="timeline-item down">
+                        <div class="timeline-card">
+                            <h4>2026.09 - 2026.10</h4>
+                            <p>完成Jaccard与DeepWalk实现，跑通基准测试获取数据</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                    <div class="timeline-item up">
+                        <div class="timeline-card">
+                            <h4>2026.11 - 2026.12</h4>
+                            <p>编写加权转移概率游走模型，开展消融实验及β参数微调</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                    <div class="timeline-item down">
+                        <div class="timeline-card">
+                            <h4>2027.01 - 2027.02</h4>
+                            <p>整理比对实验数据，完成论文草稿的前四章写作</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                    <div class="timeline-item up">
+                        <div class="timeline-card">
+                            <h4>2027.03</h4>
+                            <p>全篇学位论文成稿，提交至崔教授处进行预审阅与修改</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                    <div class="timeline-item down">
+                        <div class="timeline-card">
+                            <h4>2027.04</h4>
+                            <p>完成论文定稿、系统查重、双盲评审，进行答辩准备</p>
+                        </div>
+                        <div class="timeline-node"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Novelty -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>本文主要创新贡献</h2>
+                <div class="slide-number">10</div>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">
+                <div class="novelty-row">
+                    <div class="novelty-badge">01</div>
+                    <div class="novelty-body">
+                        <h4>网络随机游走机制的结构化概率约束</h4>
+                        <p>引入一阶 Jaccard 拓扑度量构建非均匀状态转移权重，使得网络表示学习能够深度捕获微观的邻域社区紧密度。</p>
+                    </div>
+                </div>
+                <div class="novelty-row">
+                    <div class="novelty-badge">02</div>
+                    <div class="novelty-body">
+                        <h4>引入调控局部开发与全局探索的平滑机制</h4>
+                        <p>创新性在游走中设计了控制因子 β。通过对该参数的灵敏度调控，完美平衡局部结构开发与全局表示学习的迭代优化权重。</p>
+                    </div>
+                </div>
+                <div class="novelty-row">
+                    <div class="novelty-badge">03</div>
+                    <div class="novelty-body">
+                        <h4>搭建极低硬件开销的超轻量学术分析框架</h4>
+                        <p>完全无需大型 GPU 算力支持，依靠标准 Python 科学库即可在秒级跑完对比实验，兼顾了高落地性与极强的工程维护度。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: References -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar"></div>
+                <h2>核心参考文献</h2>
+                <div class="slide-number">11</div>
+            </div>
+            <div class="card" style="flex-grow: 1; padding: 20px 30px; line-height: 1.7; font-family: 'Courier New', Courier, monospace; font-size: 22px;">
+                <p style="margin-bottom: 12px;">[1] Perozzi B, Al-Rfou R, Skiena S. DeepWalk: Online learning of social representations[C]//Proceedings of the KDD, 2014.</p>
+                <p style="margin-bottom: 12px;">[2] Grover A, Leskovec J. node2vec: Scalable feature learning for networks[C]//Proceedings of the KDD, 2016.</p>
+                <p style="margin-bottom: 12px;">[3] Liben-Nowell D, Kleinberg J. The link-prediction problem for social networks[J]. JASIST, 2007.</p>
+                <p style="margin-bottom: 12px;">[4] Tang J, Qu M, Wang M, et al. LINE: Large-scale information network embedding[C]//Proceedings of the WWW, 2015.</p>
+                <p style="margin-bottom: 12px;">[5] Adamic L A, Adar E. Friends and neighbors on the Web[J]. Social Networks, 2003.</p>
+                <p style="margin-bottom: 12px;">[6] Kumar A, Singh S S, Singh K, et al. Link prediction techniques, applications, and performance: A survey[J]. Physica A, 2020.</p>
+                <p style="margin-bottom: 12px;">[7] Zhou T, L&uuml; L, Zhang Y C. Unbiased measure of the power of link prediction algorithms[J]. New Journal of Physics, 2009.</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Thankyou -->
+        <div class="slide" style="justify-content: center; align-items: center;">
+            <div class="card thankyou-card">
+                <h1>感谢各位评委老师的指导与倾听</h1>
+                <p>敬请各位专家评委批评指正</p>
+                <p style="margin-top: 20px; font-weight: 500; font-size: 28px;">汇报人：刘新宇  |  导师：崔建群 教授</p>
+                <div class="sub-meta">
+                    Central China Normal University Wollongong Joint Institute<br>
+                    July 2026
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Backup Slide 1 (Theory 1) -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar" style="background: var(--accent);"></div>
+                <h2>备份幻灯片：平滑机制与边界状态分析</h2>
+                <div class="slide-number">13</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title accented">🛡️ Jaccard 相似度为 0 边界分析</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>边界预测：</strong>在网络稀疏区域，相邻节点对极其可能不存在共同邻居，导致其 Jaccard 相似度为 0。</p>
+                        <p style="margin-top: 15px;"><strong>公式弹性平滑：</strong></p>
+                        <p>当 $Jaccard(u, v) = 0$ 时，转移概率退化为：</p>
+                        <div style="font-family: monospace; background: #f1f5f9; padding: 10px 15px; border-radius: 8px; margin: 10px 0; color: #1e3a8a; font-size: 24px; text-align: center;">
+                            P'(v | u) &prop; &beta;
+                        </div>
+                        <p>保证算法在没有邻域重叠的情况下能够根据常量 &beta; 进行均匀探索，<strong>避免游走状态卡死</strong>。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⚙️ 平滑参数 &beta; 的双重控制作用</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>&beta; &rarr; 0 (强局部开发)</strong>：游走概率完全偏好局域拓扑紧密、相似度极高的社群节点。利于刻画微观社区结构。</p>
+                        <p style="margin-top: 15px;"><strong>&beta; &rarr; &infin; (全局宏观探索)</strong>：相似度矩阵的影响被均匀稀释，随机游走完全退化为传统均匀游走。利于挖掘高阶全局关联。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Backup Slide 2 (Theory 2) -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar" style="background: var(--accent);"></div>
+                <h2>备份幻灯片：本方法 vs 图卷积神经网络 (GNN)</h2>
+                <div class="slide-number">14</div>
+            </div>
+            <table class="backup-table">
+                <thead>
+                    <tr>
+                        <th>对比维度</th>
+                        <th>Jaccard 加权随机游走嵌入 (本方法)</th>
+                        <th>图卷积神经网络 (GCN, GAT, etc.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>硬件要求与算力</strong></td>
+                        <td>极低。仅需普通 CPU，在无显卡环境下数秒至数分钟内快速收敛。</td>
+                        <td>高。高度依赖大显存 GPU 资源，在超大图上极易发生显存溢出。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>高阶长程挖掘</strong></td>
+                        <td>强。通过设置步长 $l=80$ 无损地捕捉远距离节点的高阶交互。</td>
+                        <td>弱。受限于过度平滑（Over-smoothing），网络通常无法超过3-4层。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>过度平滑限制</strong></td>
+                        <td>无。基于 Skip-gram 路径采样的节点分布向量，不存在表征趋同。</td>
+                        <td>严重。随着层数加深，所有节点特征表示倾向收敛于同一数值。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>工程落地与可扩展性</strong></td>
+                        <td>极佳。非常适合轻量级图分析系统和工业级嵌入式大图分析。</td>
+                        <td>一般。大规模动态图环境下的分布式训练与推理开销评估庞大。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 15: Backup Slide 3 (Theory 3) -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="accent-bar" style="background: var(--accent);"></div>
+                <h2>备份幻灯片：实验规范与标签噪声防御</h2>
+                <div class="slide-number">15</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title accented">📊 1:1 负样本采样设计规范</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>采样流程：</strong>从图上所有不存在连接的节点对中，随机均匀抽取与正样本测试边 <strong>等量</strong> 的非相连边作为负样本。</p>
+                        <p style="margin-top: 15px;"><strong>对齐评估基准：</strong></p>
+                        <p>遵循 Liben-Nowell [5] 链路预测经典规范，使分类随机猜测基线 AUC 固定为 0.5，从而获得最客观、无偏的相对性能增量衡量。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🛡️ 潜在关系（标签噪声）的防御</div>
+                    <div class="card-content" style="font-size: 22px;">
+                        <p><strong>什么是标签噪声：</strong>现实中“未相连的节点”可能仅是“尚未被观察到的潜在正边”，在采样中会被误标为负样本。</p>
+                        <p style="margin-top: 15px;"><strong>AUC-ROC 的天然免疫力：</strong></p>
+                        <p>AUC-ROC 是基于概率排序的客观指标。只要算法能把真实存在的正边排在预测概率的前列，微量的负样本噪声不会干扰相对排序结果，算法评估依然完全有效。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Overlay Controls -->
+    <div class="controls">
+        <div class="keyboard-tip">提示: 点击屏幕右半边下一页，左半边上一页。也支持键盘 &larr; &rarr; 键及小键盘 4 和 6。</div>
+        <button class="btn-control" id="prev-btn" title="上一页">&larr;</button>
+        <button class="btn-control" id="next-btn" title="下一页">&rarr;</button>
+    </div>
+
+    <!-- Top/Bottom Progress Bar -->
+    <div class="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <script>
+        // Interactive presentation logic
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        
+        let currentIdx = 0;
+        const totalSlides = slides.length;
+
+        function updateSlideVisibility() {
+            slides.forEach((slide, idx) => {
+                if (idx === currentIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            // Update progress bar
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+        }
+
+        function nextSlide() {
+            if (currentIdx < totalSlides - 1) {
+                currentIdx++;
+                updateSlideVisibility();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                updateSlideVisibility();
+            }
+        }
+
+        // Add button event listeners
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent duplicate click triggers on body
+            nextSlide();
+        });
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevSlide();
+        });
+
+        // Click on body to navigate (Left half = prev, Right half = next)
+        document.body.addEventListener('click', (e) => {
+            // Ignore clicks on controls or any buttons
+            if (e.target.closest('.controls') || e.target.closest('.btn-control')) return;
+            
+            const screenWidth = window.innerWidth;
+            if (e.clientX > screenWidth / 2) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        });
+
+        // Keydown keyboard event listener (Arrow keys, Space/Enter, and Numpad)
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'ArrowRight' || 
+                e.key === 'Right' || 
+                e.key === ' ' || 
+                e.key === 'Enter' || 
+                e.code === 'Numpad6' || 
+                e.keyCode === 102
+            ) {
+                e.preventDefault();
+                nextSlide();
+            } 
+            else if (
+                e.key === 'ArrowLeft' || 
+                e.key === 'Left' || 
+                e.key === 'Backspace' || 
+                e.code === 'Numpad4' || 
+                e.keyCode === 100
+            ) {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Initialize progress
+        updateSlideVisibility();
+    </script>
+</body>
+</html>

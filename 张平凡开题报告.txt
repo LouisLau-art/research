@@ -1,0 +1,233 @@
+Research Proposal Form for Students of
+CCNU Wollongong Joint Institute
+Title ： Research on Routing Algorithm based on Node Social
+Relationship and Social Behavior in Opportunistic Networks
+
+Name of Student：
+Student ID：
+Major：
+
+Zhang Pingfan
+
+2018124023
+Telecommunications Engineering
+
+Research field：
+
+opportunistic network
+
+Supervisor：
+
+Jianqun Cui
+
+Date：
+
+15/10/2019
+
+Central China Normal University Wollongong Joint Institute
+August 2019
+
+1. Research Content
+(a) Please describe research problems and key challenges to be addressed in the project
+With the deep research of wireless communication technology at home and abroad in recent years,
+mobile self-organizing network has begun to develop rapidly. The network consists of mobile
+nodes that can communicate freely and does not rely on limited communication infrastructure such
+as communication base stations. Among them, the mobile node realizes the network
+communication by the cooperation between each other, and a certain mobile node sends the
+communication fault in the network does not affect the communication process of the whole
+network.
+However, in practical application, the topology of mobile ad hoc network changes frequently due
+to the movement of nodes, and the connectivity between mobile nodes can not be guaranteed,
+which greatly affects the communication performance of the network. In order to solve the
+problem that the network communication performance is affected by the frequent interruptions of
+mobile nodes, delay tolerance network emerges as the times require.
+Opportunistic network is the inheritance and development of mobile ad hoc network and delay
+tolerance network, which is composed of a large number of mobile nodes with short distance
+communication ability. In the opportunistic network, the mobile nodes distributed in a specific
+area communicate with each other through the encounter opportunity brought by their own
+movement by carrying Bluetooth or Wi-Fi and other close-range wireless communication devices.
+As a bridge between the opportunity network and the mobile social network, the opportunity
+mobile social network not only inherits the characteristics of the above traditional opportunity
+network, but also has the attributes of the mobile social network. By using the social
+characteristics of human beings, such as interests, similarities, daily activities and mobile patterns,
+the network realizes message forwarding and data sharing in the network.
+At present, researchers at home and abroad have carried out extensive and in-depth research on
+zero-information and information-assisted routing algorithms, and achieved certain results.
+However, in the opportunistic mobile social network, because mobile nodes have rich social
+attributes and huge social relationship networks, how to comprehensively utilize the social
+attributes of mobile nodes as well as social relationships and behaviors to design routing
+forwarding strategies and improve their routing performance is still a major challenge.
+
+(b) Please state the significance of the project
+The opportunistic network adopts ''Store-Carry-Forward'' mode, and the information can be
+transmitted from the communication source to the target node in the form of skip forwarding
+among mobile users. Therefore, the opportunistic network can realize communication without the
+need for full connectivity of the network, which has a significant impact on the realization of
+future universal computing. In addition, the opportunistic network has been widely used in remote
+area network information transmission, wildlife detection sensor network, emergency rescue in
+disaster environment, vehicle network and media sharing.
+The working mechanism of data forwarding in opportunistic mobile social network originates
+from opportunistic network, which also adopts "Store-Carry-Forward" message forwarding mode.
+Mobile social network is a "human" centered mobile communication network, in which the mobile
+2
+
+behavior of nodes is usually guided by human social relations, so the importance of this project
+lies in the use of social network method to analyze the social relations of mobile users in the
+network in order to further improve the efficiency of information transmission and forwarding and
+promote the organic integration of mobile communication network and social network.
+
+(c) Please describe research objectives and planned outcomes of the project
+At present, researchers at home and abroad have tried to introduce a series of social attributes into
+routing forwarding decisions, but it has been found that social relations, which are closely related
+to human life, have not been given enough attention. Therefore, the goal of this project is to further
+improve the performance of the routing algorithm in the opportunistic mobile social network and
+to propose a new routing algorithm based on social and social behavior. In addition, the result of
+this project is that the proposed algorithm has good performance in message delivery rate, system
+overhead rate and average time delay.
+
+2. Proposed Research Plan and Methodology
+(a) Please describe research methods, the theories and strategies adopted in the project
+The main research methods of the project are as follows:
+（1）In view of the problem that the social attribute which is closely related to human life is not
+paid enough attention to the social relations, the project first puts forward an algorithm for
+extracting the social relations of the nodes in the social network. According to the characteristics of
+human being in social life, this research defines multiple social relations among the mobile nodes in
+the network.
+（2）After the social relationship among the nodes is extracted, the social behavior among the nodes
+is further studied, and the routing algorithm based on the social and social behavior of the nodes is
+proposed.
+The main theories and strategies used in the project are as follows:
+In this project, some classical routing algorithms are mainly used as the theoretical basis.
+（1）Epidemic routing algorithm
+The famous Epidemic routing algorithm proposed by Vahdat et al is based on a representative
+routing protocol. The algorithm makes use of node mobility to increase the connection ability
+between nodes, exchange information, and finally transmit the message generated by the source
+node to the destination node, and increase the transmission rate by increasing the number of copies
+（2）SAW routing algorithm
+The single copy routing protocol based on utility reduces the consumption of resources, but brings
+great delay. Therefore, a multi-replica routing protocol algorithm with low transmission delay and
+small hops can effectively limit the number of replicas, which consists of two stages: the Spray
+stage and the Wait stage.
+（3）ComPas routing algorithm
+This algorithm is a routing protocol based on community model. By studying the social relations
+and social behavior between nodes, the group movement model of nodes is extracted, and the data
+3
+
+management model of message reading and writing consumption is considered. An efficient replica
+allocation strategy is proposed, which reduces the allocation cost of message replicas, and finally
+obtains higher routing efficiency and stability.
+
+(b) Please explain the reasons why the methods, strategies, theories stated above are adopted,
+indicate the reference to the literature you have read so far and give your comments on the
+literature.
+The reasons for using the above methods, strategies and theories are as follows：
+（1）These algorithms are classical algorithms with very stable performance.
+（2）These algorithms have a strong application prospect and can be widely used in production and
+life.
+（3）The new algorithm can be put forward based on these algorithms.
+The references are as follows:
+[1] Fall K.A Delay-Tolerant Network for Challenged Internet// Conference on
+Application,Technologies,Architecture,and
+Protocols
+for
+Computer
+Communications,ACM,2003:27-34.
+[2] The Internet Engineering Task Force, Mobile Ad-Hoc Networks(MANET), 2009,4(22):103-115
+[3] Pentland A, Fletcher R, Hasson A, DakNet;rethinking connectivity in developing
+nations.Computer,2004,37(1):78-83.
+[4] Zhang X, Neglia G, Kurose J, et al. Performance Modeling of Epidemic Routing[J].Computer
+Networks,2007,51(10):2867-2891.
+[5] Li J A, Wu Y, Lai K K,et al. Replenishment Routing Problems Between a Single Supplier and
+Multiple Retailers with Direct Delivery[J]. European Journal of Operational
+Research,2008,190(2):412-420
+[6] Zhao W, Ammar M,Zegura E. A message ferrying approach for data delivery in sparse mobile ad
+hoc networks[C]//Proceeding of the IEEE ISCC,2011,309-315.
+[7] Leguay J, Friedman T, Conan V. Evaluating mobility pattern space routing for
+DTNs[C]//Proceedings of the IEEE INFOCOM 2006,200,1-10.
+
+(c) Please describe how you intend to validate your solution/experimental
+results/simulations/procedures as well as your implementation plan (e.g., programming languages,
+software, hardware, etc.).
+Compared with the software imitation is simple and fast, the cost of building the actual network
+experiment system is often intolerable. Therefore, most of the researchers use simulation software to
+simulate the transmission of information in the real network environment to carry out related
+scientific research work. The ONE simulation software can simulate the real opportunity network
+environment by simply setting it in its configuration file. Therefore, ONE is used to simulate the
+energy saving routing algorithm of opportunity network proposed in this paper.
+ONE (Opportunistic Network Environment simulator) was developed by Nokia Research Center
+with the support of SINDTN and CATDTN engineering projects. It has the ability to simulate and
+analyze a variety of opportunity network protocols, and can realize the integration of mobile mode,
+opportunity network routing algorithm and graphical interface. In addition, ONE provides a large
+4
+
+number of result reports, including the number of connections of the node, the detailed transmission
+process of the message successfully reached the target node, the delay of the message, and so on.
+The performance of the whole network can be further analyzed.
+具体的实施计划如下：????Chinese?
+（1）Construction of ONE Simulation platform
+（2）Performance Analysis of Epidemic routing algorithm
+1. Simulation environment setting
+2. analysis of simulation result
+（3）Performance Analysis of SAW routing algorithm
+1. Simulation environment setting
+2. analysis of simulation result
+（4）Performance Analysis of Prophet routing algorithm
+1. Simulation environment setting
+2. analysis of simulation result
+（5）Performance Analysis of ComPas routing algorithm
+1. Simulation environment setting
+2. analysis of simulation result
+
+(d) Please list the timeline for the project
+Timetable
+(Month/Year)
+10/2019
+
+12/2019
+
+Content
+Reading sufficient articles to provide thought for my project;
+Present my own ideas about research direction for the thesis topic;
+Present my innovation point in my study area, including at least one innovation point;
+Reading sufficient articles to provide thought for my project;
+Accomplish the preliminary optimization work for the algorithms;
+Meantime, accomplish the writing work of thesis gradually;
+
+3/2020
+
+Initial completion of thesis writing work;
+Accomplish the revision work of thesis according to the supervisor’s suggestions;
+
+4/2020
+
+Accomplish the finalization work of the thesis.
+
+(e) Please describe the novelty of the research
+
+5
+
+On the basis of previous research work, this project makes effort in improvement of opportunistic
+networks’ performance in certain aspects.
+(1) In this project, an algorithm for extracting social relations between nodes is proposed.
+(2)According to the proposed algorithm of extracting social relations between nodes, the social
+behavior between nodes is further analyzed.
+(3)This project focuses on the analysis of the social attributes of nodes, the organic integration of
+mobile communication network and social network, and further improve the efficiency of message
+transmission and forwarding between nodes.
+
+把格式调成下面的表格在单独的一页
+3. Review Comments and Recommendation on the Research Proposal
+Supervisor’s comments on feasibility of the research, research plan and opinion on the proposal
+presentation:
+
+6
+
+Conclusion
+
+Signature of Supervisor：
+
+Date (dd/mm/yy):
+
+7
+
+

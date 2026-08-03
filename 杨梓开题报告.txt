@@ -1,0 +1,269 @@
+Research Proposal Form for Students of
+CCNU Wollongong Joint Institute
+Title：Research on Node Classification Message Transmission Based on
+Opportunistic Networks Community
+Name of Student：
+
+Zi Yang
+
+Student ID：
+
+6287062
+
+Major：
+Research field：
+
+Telecommunications Engineering
+Opportunistic Networks
+
+Supervisor：
+
+Jianqun Cui
+
+Date：
+
+15/10/2019
+
+Central China Normal University Wollongong Joint Institute
+August 2019
+
+1. Research Content
+(a) Please describe research problems and key challenges to be addressed in the project
+In the opportunistic network, the following conditions always exist: moving of nodes, and the
+connections between nodes are discontinuous. Therefore, connection islands often appear in the
+opportunistic network. However, the movement of the nodes provide the opportunities for the
+meeting among nodes. When there exists communication between two nodes, firstly, the message
+are transmitted to the encountered node, then, the encountered node stores the message, moves, and
+then reaches the next hop and finally meets the target node.
+As mentioned above, nodes in the opportunistic network keep moving and the network topology
+changes constantly. How to choose the appropriate intermediate nodes for the source node and the
+target node becomes a challenging problem in the path routing.
+In real society, the phenomenon of aggregation exists in the human connections, we call the
+group formed by aggregation phenomenon as the community. Within the community, nodes
+connect frequently, in contrast, the probability of nodes in the different communities connect is
+relatively low. Therefore, we consider dividing the network into different communities according to
+the frequency of encounter. Since the nodes in the same community meet frequently, if the source
+node and the target node are in the same community, we can use other nodes in the current
+community to help us transmit the message, so the message could be forwarded easily. Utilizing the
+same idea, when message are transmitted between communities, we can think of the community as
+a node, and the whole network is composed by several “community nodes”, and the community
+closely connected with the target community can serve as an intermediary one for message
+forwarding, so that messages can be forwarded quickly.
+So, the key challenges addressed in my project are as follows:
+(a). How to divide the opportunistic network into several communities rationally.
+(b). How to design algorithm to make the message transmitted in the community efficiently.
+(c). How to design algorithm to make the message transmitted among the communities efficiently.
+
+(b) Please state the significance of the project
+In the traditional wireless multi-hop network, the network is often in a discontinuous condition
+due to node movement, signal attenuation, obstacle obstruction, etc., and mostly a complete end-toend path cannot be established between the source node and the target node, which resulting failure
+in message transmission.
+However, opportunistic network is a kind of network that solving these kinds of problems. By
+utilizing the mobility of nodes, it builds bridges among communication nodes, and changes the
+traditional wireless networks’ mode “storing-forwarding” into “storing-carrying-forwarding”.
+Although some algorithms perform well in a specific environment, still, they do not take into
+account the actual mobile characteristics of humans and the impact of social relationships on the
+routing mechanism. If these algorithms are applied to the network, some problems will happen, such
+as increasing of the transmission delay and decreasing of the transmission success rate. In a
+challenging environment where network topology changes rapidly and nodes move dynamically,
+utilizing the network characteristics of the community which are relatively stable can help us design
+better routing algorithms. Instead, current community-based routing algorithms mostly focus on
+dividing communities statically and transmitting message in a single-copy condition, which perform
+poorly in the network. This project studies the routing problem of message transmission by taking
+the Pocket Switched Networks (PSNs) as the research background, and combining the social
+aggregation behavior of PSNs, which is significant to increase the performance of opportunistic
+networks.
+2
+
+(c) Please describe research objectives and planned outcomes of the project
+In view of the above problems, this project would fully consider the communication aggregation
+behavior between mobile devices in the real world and the distinction of communication frequency
+within and between communities, and propose a mechanism of node classification message
+transmission based on opportunistic networks community. This mechanism divides the network into
+communities by determining the connections between nodes and classifying the nodes in one
+community according to the probability of encountering among nodes, and introduces the parameter
+“time + ratio of effective node” to realize the dynamic division of communities. The improved
+Prophet protocol are implied to realize transmission within communities, and the communication
+weights are implied to realize transmission among communities.
+This project plans to use the simulation platform ONE to simulate the algorithm and compare this
+algorithm of node classification message transmission with the classic routing algorithm. It is
+expected that the algorithm proposed in this project has good performance in improving message
+transmission success rate and decreasing transmission delay.
+
+2. Proposed Research Plan and Methodology
+(a) Please describe research methods, the theories and strategies adopted in the project
+The Prophet protocol is a protocol based on the node's historical encounter information and
+transmit information. This protocol consists of two parts: calculation of the delivery predictability,
+and forwarding strategy.
+(a) Calculation of the delivery predictability: The parameter delivery predictability represents the
+chance of encounter between two nodes. This parameter consists of three parts: update of probability,
+attenuation of probability, and transmission of probability.
+(1) Update of probability: If two nodes meet frequently, then these two nodes are more likely to meet
+again at some time in the future, and the probability of encounter will be higher. When two points
+meet, the node updates its probability value according to the following formula, where P(a,b)is the
+probability when the node a encounters the node b, and Pinit ϵ [0,1] is an initial constant.
+P(a,b) = P(a,b)old +( 1 - P(a,b)old ) * Pinit
+(2) Attenuation of probability: If two nodes do not meet for a long time, the probability of encounter
+will decrease with time, the formula is as follows. Where γ is an attenuation constant and k is the
+number of time periods from the last updating.
+P(a,b) = P(a,b)old * γk
+(3) Transmission of probability: In addition, Prophet also utilizes the transitivity of messages, that is,
+nodes a and b often meet, and nodes b and c often meet, then c can act as a forwarding node of a. The
+formula is as follows, where β ϵ [0,1] is a scale constant.
+P(a,c) = P(a,c)old + ( 1 - P(a,c)old ) * P(a,b) * P(b,c) *β
+(b) Forwarding strategy: The traditional routing protocol forwards the message to the node whose
+path to the destination node is the shortest. However, in the opportunistic network, we can not
+calculate the shortest path between the nodes. The Prophet algorithm chooses to transmit message to
+the node whose meeting probability is larger than one of carrying the message’s node, and the node
+which carrying message does not delete the message immediately, instead, the stored message are
+managed according to the FIFO algorithm.
+
+3
+
+(b) Please explain the reasons why the methods, strategies, theories stated above are adopted, indicate
+the reference to the literature you have read so far and give your comments on the literature.
+The routing protocol based on distribution replication occupies a large amount of cache and
+bandwidth resources, and the massive spread of messages between nodes increases the network’s
+transmission load. As the size of the network increases, the limited situation of cache and bandwidth
+resources will become more and more serious, which means that this kind of algorithm is difficult to
+be optimized to increase its performance, therefore, a sharp decline in performance will be caused.
+In the end-to-end information-based routing protocol, a large number of special points generate a
+large amount of information redundancy to a certain extent, which will waste too much resources.
+The control of the movement path of the special node and the assignment of the nodes are also issues
+remained to be considered.
+In the code-based routing protocol, codec has a higher complexity and brings a certain amount of
+energy consumption; at the same time, better solutions about method and number of splitting the
+information block are still need to be proposed.
+The literature I have read:
+[1] V.D. Becker. Epidemic routing for partially connected ad hoc networks[R]. Durham NC: Duke
+University, Department of Computer Science, 2000.
+[2] Spyropoulos Thrasyvoulos, Psounis K, Raghavendra C S. Spray and wait: an efficient routing
+scheme for intermittently connected mobile networks[C]. Proceedings of ACM SIGCOMM 2005
+Workshops: Conference on Computer Communications. New York: ACM. 2005: 252-259.
+[3] T. Spyropoulos, K. Psounis, C.S. Raghavendra. Spray and focus: efficient mobility-assisted
+routing for heterogeneous and correlated mobility[C]. in Proc. of the Fifth Annual IEEE International
+Conference on Pervasive Computing and Communications Workshops. New York: IEEE. 2007: 7985.
+[4] Jacquet P, Mans B. Routing in intermittently connected networks: Age rumors in connected
+components[C]. Proceeding – Fifth Annual IEEE International Conference on Pervasive Computing
+and Communications Workshops. New York: IEEE. 2007: 53-58.
+[5] Boldrini C, Conti M, Passarella A. Exploiting users’ social relations to forward data in
+opportunistic networks: The HiBOp solution[J]. Pervasive and Mobile Computing, 2008, 4(5): 633657.
+[6] Zhuoqun L, Lingfen S, Ifeachor E C. Adaptive routing for intermittently connected mobile ad hoc
+networks[C]. Proceedings of Sixth IEEE International Symposium on a World of Wireless Mobile
+and Multimedia Networks. New York: IEEE. 2007: 183-189.
+[7] Xue G. Research on community-based opportunity network message transmission mechanism
+[D]. Taiyuan University of Technology, 2012.
+[8] Xiaolin F. Research on Opportunistic Network Routing Protocol Based on Community Structure
+[D]. Inner Mongolia University, 2011.
+The authors of these literatures put forward their own opinions about opportunistic networks in
+some areas and optimized the existing algorithms in some aspects, which is of great help to improve
+the performance of the opportunistic networks. However, the algorithms proposed in these literatures
+have certain drawbacks and need to be further optimized in the future.
+
+4
+
+(c) Please describe how you intend to validate your solution/experimental
+results/simulations/procedures as well as your implementation plan (e.g., programming languages,
+software, hardware, etc.).
+This project plans to utilize a Java-based DTN simulation tool ONE (Opportunistic Networking
+Environment) to simulate the community-based opportunity network routing protocol and Prophet
+protocol, analyze and compare the simulation data to obtain the difference in ratio of transmission,
+delay of end-to-end among messages and the optimization for protocol in a specific simulation
+environment. This platform is designed to evaluate routing and application protocols. It allows users
+to create application scenarios based on different mobile models while providing a basic framework
+for implementing routing and application protocols. Interactive visual tools and post-processing tools
+support evaluation experiments. At the core part of the platform, ONE is a simulation engine for
+agent-based discrete events. In each simulation time period, this engine updates some of the modules
+that implement the main simulation functions. The main functions of the ONE simulation simulator
+are node movement, node contact, routing and message processing modeling. The collection and
+analysis of results is achieved through visual tools, reporting tools and post-processing tools.
+
+(d) Please list the timeline for the project
+Timetable
+(Month/Year)
+10/2019
+
+12/2019
+
+3/2020
+
+Content
+Reading sufficient articles to provide thought for my project;
+Present my own ideas about research direction for the thesis topic;
+Present my innovation point in my study area, including at least one innovation point;
+Reading sufficient articles to provide thought for my project;
+Accomplish the preliminary optimization work for the algotithms;
+Meantime, accomplish the writing work of thesis gradually;
+Initial completion of thesis writing work;
+Accomplish the revision work of thesis according to the supervisor’s suggestions;
+
+Accomplish the finalization work of the theis.
+4/2020
+
+5
+
+(e) Please describe the novelty of the research
+On the basis of previous research work, this project makes effort in improvement of opportunistic
+networks’ performance in certain aspects.
+(1). In the aspect of division of community, my project stipulates a series of probability values as
+indicators for community division. For example, we can set two probability values: 0.5 and 0.7. When
+the probability between nodes is greater than 0.5, there are edges between the nodes, otherwise there
+is no edge. Furthermore, when the inter-node probability is greater than 0.5 and less than 0.7, the
+nodes are set as the “level 2” nodes in the community; when the inter-node probability is greater than
+0.7, the nodes are set as the “level 1” nodes in the community, which solving the problem of weak
+connections in the network. The classification of the nodes in the community according to the
+probability of encounter is to provide a classification basis for the message transmission in the
+community.
+Besides that, my project utilizes "time + ratio of effective node" to dynamically discover the
+community structure. The period of the community structure division process is 1 week, the process
+of data statistics is parallel with the community division. When a cycle time is reached but the
+proportion of “level 1” and “level 2” nodes in one community is still more than 70%, then this
+community continues to maintain a cycle; when a cycle time is reached and the proportion of “level
+1” and “level 2” nodes in the community is less than 70%, the community will be re-divided according
+to the communication information of the last time period; when a cycle time is not reached, but the
+proportion of nodes 1 and 2 in the community has been less than 50%, the community is immediately
+re-divided according to the communication information of the last time period.
+(2). In the aspect of intra-community message transmission, my project improves the algorithm
+on the basis of the Prophet protocol.
+First, the carrying message node moves within the community. Since the probability between the
+“level 1” node and the node which carrying the message is greater than 0.7, the carrying message
+node is more likely to encounter the “level 1” node in the community compared to the “level 2” node.
+Correspondingly, the number of “level 1” node whose encountering probability with the target node
+is low is higher than that of the “level 2” node. Therefore, in order to reduce resource waste and
+improve message forwarding quality, the probability threshold range for the “level 1” node to meet
+the target node is set to be narrow, for example, p1max = 0.88, p1min = 0.6. When the carrying message
+node meets the “level 1” node, if the “level 1” nodes’ value of encountering probability with the target
+node among is greater than p1max (0.88), the carrying message node only forwards the message to the
+node with the highest encountering probability with the target node; if this value is between p1min
+(0.6) and p1max (0.88), the carrying message node forwards the message according to the Prophet
+algorithm; if this value is less than p1min (0.6) , the carrying message node does not perform the
+forwarding operation.
+If the carrying message node meets the “level 2” node, since the inter-node probability of the
+“level 2” node in the community is between 0.5 and 0.7, the probability that the carrying message
+node encounters the “level 2” node in the community is lower the “level 1” node. Correspondingly,
+the number of “level 2” node whose encountering probability with the target node is low is lower than
+that of the “level 1” node. In order to ensure that the message can be forwarded smoothly within the
+community, the probability threshold range for the “level 2” node to meet the target node can be set
+to be wider than “level 1” node, for example, p2 max= 0.88，p2min = 0.5. Similarly, when the carrying
+message node meets the “level 2” node, if the “level 2” nodes’ value of encountering probability with
+the target node among is greater than p2max (0.88), the carrying message node only forwards the
+message to the node with the highest encountering probability with the target node; if this value is
+between p2min (0.5) and p2max (0.88), the carrying message node forwards the message according to
+the Prophet algorithm; if this value is less than p2min (0.5) , the carrying message node does not
+perform the forwarding operation.
+
+6
+
+3. Review Comments and Recommendation on the Research Proposal
+Supervisor’s comments on feasibility of the research, research plan and opinion on the proposal
+presentation:
+
+Conclusion
+
+Signature of Supervisor：
+
+Date (dd/mm/yy):
+
+7
+
+

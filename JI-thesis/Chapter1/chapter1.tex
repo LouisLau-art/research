@@ -1,0 +1,54 @@
+%*******************************************************************************
+%*********************************** First Chapter *****************************
+%*******************************************************************************
+
+\chapter{Introduction}  %Title of the First Chapter
+
+\ifpdf
+    \graphicspath{{Chapter1/Figs/Raster/}{Chapter1/Figs/PDF/}{Chapter1/Figs/}}
+\else
+    \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
+\fi
+
+\section{Research Background}
+
+The rapid development and widespread adoption of online social network services (e.g., WeChat, Weibo, Facebook) have generated massive amounts of graph-structured data. These networks are dynamic and constantly evolving, with new relationships being formed and old ones decaying. In graph machine learning and network science, predicting missing or future connections between nodes based on the currently observed topology is defined as the link prediction problem~\citep{liben2007link}. 
+
+Link prediction serves as a foundational task with a wide range of real-world applications. For instance, in social platforms, it powers recommendation engines for suggesting "people you may know" to users, thereby increasing platform stickiness and expanding community cohesion. In bioinformatics, it assists in predicting unknown interactions between proteins (Protein-Protein Interactions, PPI), significantly reducing the cost and time of wet-lab screening experiments. In academic collaboration networks, it can predict potential multi-disciplinary co-authorship. However, real-world networks are typically highly sparse, meaning only a tiny fraction of potential links are actually observed, making accurate prediction a difficult task.
+
+\section{Research Problems and Key Challenges}
+
+Despite the proliferation of research on link prediction, two main paradigms exist with distinct trade-offs:
+\begin{itemize}
+    \item \textbf{Traditional Heuristic Methods}: Algorithms like Jaccard Coefficient~\citep{liben2007link}, Adamic-Adar Index~\citep{adamic2003friends}, and Resource Allocation compute proximity based on shared local neighborhoods. While highly interpretable and computationally inexpensive, they only capture extremely localized (first- or second-order) topological details, leading to poor generalization on sparse networks.
+    \item \textbf{Network Representation Learning (NRL) Methods}: Algorithms like DeepWalk~\citep{perozzi2014deepwalk} and Node2Vec~\citep{grover2016node2vec} learn low-dimensional dense node embeddings by executing random walks and optimizing skip-gram models. However, they typically adopt a uniform random walk probability, which ignores the structural亲密性 (closeness) differences between neighbors.
+\end{itemize}
+
+The core research problem addressed in this study is the lack of smooth, interpretable integration between local heuristic similarity and high-order network representation learning. To solve this, this study aims to answer how to utilize local Jaccard similarity to guide random walk exploration in DeepWalk, balancing local structure preservation and global graph topology.
+
+\section{Significance of the Research}
+
+The theoretical and practical significance of this research lies in:
+\begin{itemize}
+    \item \textbf{Theoretical Contribution}: It bridges the gap between traditional topology-based metrics and modern graph representation learning, offering an unified mathematical framework with a smoothing parameter to balance local clustering and global structural search.
+    \item \textbf{Practical Application}: The proposed framework is lightweight and can run entirely on standard CPUs without requiring expensive GPU compute resources, making it highly suitable for resource-constrained engineering deployment in recommendation systems, anomaly detection, and academic network modeling.
+\end{itemize}
+
+\section{Research Objectives and Contents}
+
+The primary objective of this thesis is to propose a Jaccard-weighted random walk representation learning framework that out-performs conventional DeepWalk and classic similarity metrics on standard social graph datasets. The main research contents include:
+\begin{enumerate}
+    \item Designing and implementing a parameterized transitional probability model that leverages neighbor-wise similarity to adjust random walk step weights.
+    \item Exploring the parameter sensitivity of the smoothing factor $\beta$ on balancing local exploitation and global exploration.
+    \item Evaluating the learned node embeddings on downstream link classification tasks using a Logistic Regression classifier under standardized metric controls (AUC-ROC and AP).
+\end{enumerate}
+
+\section{Thesis Outline}
+
+The rest of the thesis is organized as follows:
+\begin{itemize}
+    \item \textbf{Chapter 2} presents a comprehensive literature review of heuristic similarity measures, random-walk-based graph representation learning, and modern GNN-based link prediction.
+    \item \textbf{Chapter 3} details the proposed methodology, including the mathematical formulation of Jaccard-weighted random walks, feature extraction, and prediction classification.
+    \item \textbf{Chapter 4} details the experimental configurations, dataset profiles, and comparative evaluation results.
+    \item \textbf{Chapter 5} concludes the thesis and outlines future research directions.
+\end{itemize}

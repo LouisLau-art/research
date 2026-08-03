@@ -1,0 +1,241 @@
+Research Proposal for Students of CCNU
+Wollongong Joint Institute
+Research Title ： Research on Community-based Routing Algorithm in
+Opportunistic Networks
+
+Student Name：
+
+Ren Xia
+
+Student ID：
+
+6641593
+
+Major：
+
+Computer Science
+
+Supervisor：
+
+Jianqun Cui
+
+Date：
+
+20/09/2020
+
+Central China Normal University Wollongong Joint Institute
+September 2020
+
+1. Research Content
+(a) Please describe research problems and key challenges to be addressed in the research
+Research Problems
+As the demand for communication increases, the transmission of network information gradually
+extends to more severe environments, such as interstellar communication, wildlife monitoring, and
+mobile social networking. In many cases, the stability between nodes cannot be guaranteed. Without
+a stable end-to-end path, the transmission of messages is often random.
+In recent studies, scholars have gradually realized that some communication nodes can be divided
+by certain characteristics of the nodes to form groups similar to communities. With the introduction
+of the node's preference for location, the social relationship between nodes and the introduction of
+groups and communities, delay-tolerant networks with social network properties have been
+gradually proposed and have quickly become a hot and difficult research topic.
+In the Opportunistic networks based on community-aware routing algorithms, nodes in the same
+community often have similar characteristics, or nodes have a high probability of encountering.
+When messages are transmitted between communities, the community can be regarded as a node.
+The entire network is composed of several "community nodes". The community closely connected
+to the target community can act as an intermediary for message forwarding, so that messages can be
+forwarded quickly.
+Based on these characteristics, this article introduces Prophet and Epidemic algorithms in the
+messaging within the community. After obtaining the number of nodes in the community, choose
+the more appropriate algorithm among the two algorithms.
+Key Challenges
+1. How to divide the nodes in opportunistic network into different communities rationally.
+2. How to get the number of nodes in the community.
+3. How to reasonably choose the algorithm of message delivery in the community.
+
+(b) Please state the significance of the research
+The communication model of traditional Internet and other networks is based on some assumptions,
+such as stable end-to-end connection, two-way symmetrical data transmission rate, relatively short
+transmission delay, etc. However, in many application fields in reality, Frequent disconnection of
+connections between nodes may be caused by uncontrollable reasons such as node mobility, energy
+scheduling, and environmental interference. It is impossible to establish a structured fully connected
+network. The traditional multi-hop ad hoc network protocol cannot be used in this challenging
+network. Effective operation. However, as a new type of network architecture, the opportunistic
+network can better adapt to these challenging environments and meet communication needs. The
+opportunistic network adopts a "storage-carry-forward" mechanism, which stores and carries
+messages by relay nodes. Until the next chance to meet. At present, more and more application
+scenarios are deploying and applying opportunistic networks, such as wildlife monitoring sensor
+networks, mobile vehicle-mounted networks, interstellar networks, rural communication networks,
+mobile social networks, etc. In social delay tolerance networks, community information is used
+Message routing can significantly improve the routing performance of the network. The communitybased social perception routing algorithm first uses a certain community detection algorithm to
+allocate nodes to different communities according to the social relationship, common interests,
+similarities, etc. between nodes, and then uses the community information of the source node and
+the destination node to route select. The message forwarding process is mainly divided into: message
+2
+
+transfer within the community and message transfer between communities. The message transfer
+process in the community includes two stages: the source node sends the message to the community
+home where it is located and the community home where the destination node is located sends the
+message to the destination node. This research uses the number of nodes in the community to
+distinguish whether to use Epidemic algorithm or Prophet algorithm to find a balance between load
+rate and delivery rate.
+(c) Please describe research objectives and planned outcomes of the research
+Research Objectives
+The main research object of this article is opportunistic networks. In the social opportunistic
+networks, the use of community information for message routing can significantly improve the
+routing performance of the network. This paper studies the advantages of different algorithms in
+message delivery when the number of nodes is controllable.
+Planned Outcomes
+On the basis of the opportunistic networks, this project considers the social attributes between nodes,
+divides communities according to social attributes, and determines which algorithm to use according
+to the number of community nodes. Eventually improve the delivery rate of messages, reduce delay
+and message load rate.
+
+2. Proposed Research Plan and Methodology
+(a) Please describe research methods, the theories and strategies adopted in the research
+
+3
+
+Research Methodology
+1. Obtain application scenarios of opportunistic networks by consulting the literature.
+2. Obtain the difficulties in the practical application of opportunistic networks by consulting highreference articles.
+3. Regarding how the opportunistic networks can effectively transmit information, it is necessary to
+study the system currently implemented in the industry to understand the functions they have
+achieved.
+4. It is necessary to study how to abstract the social attributes of data.
+5. It is necessary to study how to use the social attributes abstracted from different nodes to divide the
+community.
+6. Regarding accuracy, this article mainly uses the ONE platform for data verification.
+7. The document source of this article is the University of Wollongong Library.
+Theories and strategies adopted in the research
+The main strategy is to flexibly use the two algorithms by combining the characteristics of the
+Epidemic routing algorithm and the Prophet routing algorithm to increase the delivery rate.
+The main theories used in the project are as follows:
+1. Opportunistic networks
+The opportunistic networks originated from the early Delay Tolerant Network (DTN). Due to the
+instability of network topology and the discontinuity of node connections in this network, it is
+divided into several disconnected sub-regions. The disconnection of communication links between
+sub-regions, which makes each node adopt the "storage-carry-forward" communication mode.
+These nodes generally have storage, communication and computing capabilities for data exchange.
+However, in the case of sparse network structure, the data transmission of nodes have a certain
+delay.
+2. Prophet routing algorithm
+The Prophet routing algorithm is a probability-based routing algorithm, which is proposed by
+Lindgren et al. Each time the node forwards the message according to the node encounter
+probability. Therefore, it limits the number of replicas, in the meantime, increases the delivery ratio.
+3. Epidemic routing algorithm
+The Epidemic routing algorithm proposed by Vahdat et al. is a representative routing protocol based
+on flooding. The algorithm uses the mobility of nodes to increase the connection capacity between
+nodes, exchange messages, and finally transmit the messages generated by the source node to the
+destination node, and increase the transmission rate by increasing the number of copies. This
+algorithm mimics the spread of infectious viruses in biological environments. In opportunistic
+networks, when two nodes can connect, they exchange missing messages by exchanging message
+vectors. After a period of time, the nodes in the network will receive all the messages.
+4. The ONE simulation platform
+
+4
+
+The ONE simulation platform, based on java, is developed by Heisinki University of Technology
+for DTN network. It simulates the real opportunistic network environment by modeling to verify the
+experimental results.
+
+(b) Please explain the reasons why the methods, strategies, theories stated above are adopted, indicate
+the reference to the literature you have read so far and give your comments on the literature.
+The reasons for using the above methods, strategies and theories are as follows：
+The Epidemic routing algorithm is essentially based on the flooding strategy. Each node stores the
+message to be forwarded. The advantage is that no additional topology control information is needed.
+At the same time, it can achieve higher message delivery rate and lower end-to-end delay. There is no
+need to predict and estimate the state of the link, and it is relatively simple to implement.
+The community-based opportunistic network is composed of nodes with similar social attributes and
+similar activities. Unlike ordinary opportunistic networks, the social relationship between nodes is
+relatively stable and based on community-based opportunistic networks. According to this social
+attribute, it has formed different communities. By using relatively active node transmission, it links
+to different communities, thus increasing the utilization rate between nodes and enhancing the
+relationship between communities.
+The following references are classic articles in the field of opportunistic networks.
+[1] V.D. Becker. Epidemic routing for partially connected ad hoc networks[R]. Durham NC: Duke
+University, Department of Computer Science, 2000.
+[2] Spyropoulos T, Psounis K, Raghavendra C S. Spray and wait: an efficient routing scheme for
+intermittently connected mobilenetworks[C]// Proceedings of the 2005 ACM SIGCOMM workshop
+on Delay-tolerant networking. ACM, 2005: 252-259.
+[3] Xue G. Research on community-based opportunity network message transmission mechanism
+[D]. Taiyuan University of Technology, 2012.
+[4] En Wang, Yongjian Yang, Weidan Zhao, Linlu Liu. A packet routing method based on intimacy
+between nodes in a late-tolerant network [J]. Journal of Communications, 2014, 35(12): 70-77.
+[5] Yan Wang, Jianbo Li, Youmei Song, Fushu Wang. A late-tolerant network geographic routing
+algorithm based on historical encounter information [J]. Computer Engineering, 2017, 43(05): 7582.
+[6] Bo Lu. Research on key technologies of delay tolerant network based on social network
+attributes [D]. Beijing University of Posts and Telecommunications, 2014.
+
+5
+
+(c) Please describe how you intend to validate your solution/experimental
+results/simulations/procedures as well as your implementation plan (e.g., programming languages,
+software, hardware, etc.).
+Development and validation environment:
+The ONE simulation platform
+This project plans to use a Java-based DTN simulation tool ONE (Opportunistic Networking
+Environment) to simulate the community-based opportunity network routing protocol. ONE
+(Opportunistic Network Environment simulator) was developed by Nokia Research Center with the
+support of SINDTN and CATDTN engineering projects. It has the ability to simulate and analyze a
+variety of opportunity network protocols, and can realize the integration of mobile mode,
+opportunity network routing algorithm and graphical interface. In addition, ONE provides a large
+number of result reports, including the number of connections of the node, the detailed transmission
+process of the message successfully reached the target node, the delay of the message, and so on.
+The performance of the whole network can be further analyzed.
+Implementation Plan:
+1. Construction of ONE Simulation platform
+2. Improve the algorithm
+3. Obtain the results by test and experiment through the ONE simulation platform
+4. Compare experimental data with traditional classical algorithms data
+
+(d) Please list the detailed timeline for the research
+Time periods
+
+Contents
+
+30/09/2020
+
+Learn from the research results of others and determine my research direction;
+Present my own ideas about research direction for the thesis topic;
+Present my innovation point in my study area, including at least one innovation
+point;
+6
+
+28/11/2020
+
+Reading sufficient articles to provide thought for my project;
+Accomplish the preliminary optimization work for the algorithms;
+Meantime, accomplish the writing work of thesis gradually;
+
+22/02/2021
+
+Initial completion of thesis writing work;
+Accomplish the revision work of thesis according to the supervisor’s
+suggestions;
+
+15/03/2021
+
+Accomplish the finalization work of the thesis.
+
+(e) Please describe the novelty of the research
+1. By judging the number of nodes in the current community, and combining the characteristics of
+Epidemic routing algorithm and Prophet routing algorithm, the two algorithms can be used flexibly.
+2. Through the combination of the two routing algorithms, the message delivery rate is improved, and
+the message delivery delay and message load rate are reduced.
+
+3. Review Comments and Recommendation on the Research Proposal
+
+7
+
+Supervisor’s comments on feasibility of the research, research plan and opinion on the proposal
+presentation:
+
+Conclusion
+
+Signature of Supervisor：
+
+Date (dd/mm/yy):
+
+8
+
+

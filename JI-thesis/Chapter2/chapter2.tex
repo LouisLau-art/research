@@ -1,0 +1,46 @@
+%*******************************************************************************
+%****************************** Second Chapter *********************************
+%*******************************************************************************
+
+\chapter{Literature Review}
+
+\ifpdf
+    \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
+\else
+    \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
+\fi
+
+\section{Traditional Heuristic Similarity Metrics}
+
+Heuristic metrics are local topological measures that evaluate the likelihood of link formation based on neighbor intersections and paths. The study of these metrics is rooted in sociological theories like common acquaintance and triadic closure. The most commonly studied indicators can be categorized based on neighborhood structures:
+
+\begin{itemize}
+    \item \textbf{Common Neighbors (CN)}: The simplest local metric, which assumes that two nodes are more likely to form a link if they share many common neighbors.
+    \item \textbf{Jaccard Coefficient}: Normalizes the common neighbors score by the size of the union of the two nodes' neighborhoods, resolving the bias toward high-degree hub nodes:
+    \begin{equation}
+        \text{Jaccard}(v_i, v_j) = \frac{|N(v_i) \cap N(v_j)|}{|N(v_i) \cup N(v_j)|}
+    \end{equation}
+    \item \textbf{Adamic-Adar Index (AA)}: Refines the common neighbors metric by assigning heavier weights to common neighbors with lower degrees, under the assumption that sharing rare mutual friends indicates a stronger tie~\citep{adamic2003friends}:
+    \begin{equation}
+        \text{AA}(v_i, v_j) = \sum_{k \in N(v_i) \cap N(v_j)} \frac{1}{\log |N(v_k)|}
+    \end{equation}
+    \item \textbf{Resource Allocation Index (RA)}: Similar to the Adamic-Adar index but penalizes high-degree common neighbors more severely using a linear degree reciprocal~\citep{zhou2009unbiased}.
+\end{itemize}
+
+While these heuristic metrics are widely used due to their simple physical interpretations and extreme computational efficiency, they rely entirely on localized structural information (usually only 1-hop or 2-hop neighborhoods) and fail to capture high-order global relationships.
+
+\section{Network Representation Learning (NRL) and Random Walks}
+
+Network Representation Learning (also known as Network Embedding) aims to map graph nodes into a low-dimensional continuous vector space while preserving the network's structural properties. The seminal work DeepWalk~\citep{perozzi2014deepwalk} pioneered the use of natural language processing concepts on graphs. By treating random walks over a graph as sentences, it trains a Skip-gram model to learn node embeddings. 
+
+Node2Vec~\citep{grover2016node2vec} extended DeepWalk by introducing two hyperparameters, $p$ and $q$, to control the transition probabilities of random walks, balancing breadth-first search (BFS, capturing local structure) and depth-first search (DFS, capturing global structural equivalence). LINE~\citep{tang2015line} optimized embeddings by separately modeling first-order proximity (direct edge weights) and second-order proximity (shared neighborhood similarity) for large-scale graphs.
+
+\section{Research Gap and Shortcomings}
+
+Despite the success of random-walk-based graph representation models, a major limitation persists. Standard DeepWalk uses a uniform random walk probability:
+\begin{equation}
+    P(v_j | v_i) = \frac{1}{|N(v_i)|}
+\end{equation}
+This means that when a walker is at node $v_i$, it is equally likely to transition to any of its neighbors, regardless of whether they share a tight local structure (e.g., high Jaccard similarity) or are only weakly connected. Node2Vec attempts to address this by biasing walk directions toward/away from the starting node, but its bias relies entirely on step distances rather than explicit topological similarities between neighbors. 
+
+This research aims to fill this gap by designing a transitional probability model guided directly by local similarity indicators, ensuring that the high-order embeddings learned via Skip-gram are structurally informed by localized clustering.

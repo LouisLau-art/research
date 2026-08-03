@@ -1,0 +1,65 @@
+\chapter{Methodology and Framework}
+
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter3/Figs/Raster/}{Chapter3/Figs/PDF/}{Chapter3/Figs/}}
+\else
+    \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
+\fi
+
+\section{Methodological Overview}
+
+The proposed methodology is designed to bridge local neighborhood similarity and high-order network representation learning. Instead of generating node walk sequences based on uniform probabilities, we introduce a transitional probability guided by neighbor-wise structural similarity. 
+
+The pipeline consists of three sequential stages:
+\begin{enumerate}
+    \item \textbf{Transition Matrix Construction}: Computing the Jaccard similarity between all directly connected neighbor nodes and mapping them to a row-normalized transitional probability matrix.
+    \item \textbf{Biased Random Walk & Embedding}: Running a parameterized similarity-biased random walk and passing the walks through a Skip-gram model to generate 128-dimensional dense vector embeddings.
+    \item \textbf{Link Classification}: Extracting Hadamard products of embedding vectors for candidate node pairs and training a Logistic Regression classifier to execute predictions.
+\end{enumerate}
+
+\section{Jaccard-weighted Transition Probability Formulation}
+
+Let $G = (V, E)$ be an unweighted and undirected social network graph. For any node $v_i \in V$, its set of directly connected neighbors is defined as $N(v_i)$. For any neighbor node $v_j \in N(v_i)$, the Jaccard similarity is computed based on their mutual neighborhoods:
+\begin{equation}
+    \text{Jaccard}(v_i, v_j) = \frac{|N(v_i) \cap N(v_j)|}{|N(v_i) \cup N(v_j)|}
+\end{equation}
+
+To incorporate this structural similarity into random walk paths, we redefine the transition probability $P'(v_j | v_i)$ of a walker moving from $v_i$ to $v_j$ as:
+\begin{equation}
+    P'(v_j | v_i) = \frac{\text{Jaccard}(v_i, v_j) + \beta}{\sum_{k \in N(v_i)} [ \text{Jaccard}(v_i, v_k) + \beta ]}
+\end{equation}
+where $\beta > 0$ is a structural smoothing parameter.
+
+The smoothing parameter $\beta$ is a critical factor:
+\begin{itemize}
+    \item When $\beta \to \infty$, the term $\text{Jaccard}(v_i, v_j)$ becomes negligible, and $P'(v_j | v_i)$ converges to $1 / |N(v_i)|$, which is equivalent to standard uniform DeepWalk.
+    \item When $\beta \to 0$, the probability is entirely dictated by neighbor Jaccard similarity, inducing a greedy exploration that heavily traps the walker inside tight local clusters.
+\end{itemize}
+
+By adjusting $\beta$ in a range (e.g., $[0.1, 10]$), the model can balance local clustering exploitation and global structural exploration.
+
+\section{Link Prediction Evaluation Framework}
+
+To validate the model's prediction accuracy, we execute a standardized link prediction task. Given the graph $G=(V, E)$, the set of all possible node pairs is partitioned into positive samples (existing edges $E$) and negative samples (pairs with no connection $V \times V \setminus E$). 
+
+The experimental verification pipeline is structured as follows:
+\begin{enumerate}
+    \item \textbf{Data Splitting}: We randomly hide $20\%$ of existing edges to form the positive test set $E_{test\_pos}$. The remaining $80\%$ of edges form the training graph $G_{train}$.
+    \item \textbf{Negative Sampling}: We randomly sample an equivalent number of unconnected node pairs from the training graph and test graph to serve as negative training and test samples ($E_{train\_neg}$ and $E_{test\_neg}$).
+    \item \textbf{Embedding & Feature Representation}: Node embeddings are trained on $G_{train}$. For any edge $e = (u, v)$, its link representation $\mathbf{z}_{uv}$ is computed using the Hadamard product of node vectors $\mathbf{x}_u$ and $\mathbf{x}_v$:
+    \begin{equation}
+        \mathbf{z}_{uv} = \mathbf{x}_u \odot \mathbf{x}_v
+    \end{equation}
+    \item \textbf{Classification}: A Logistic Regression model is trained on $\mathbf{z}_{uv}$ for positive and negative training edges, and evaluated on $E_{test\_pos}$ and $E_{test\_neg}$.
+    \item \textbf{Performance Evaluation}: The prediction performance is measured using Area Under the ROC Curve (AUC-ROC) and Average Precision (AP).
+\end{enumerate}
+
+\section{Standard Benchmarks and Configuration}
+
+The performance of our proposed method will be compared against several classic baseline methods:
+\begin{enumerate}
+    \item \textbf{Local Heuristic Methods}: Jaccard Coefficient, Adamic-Adar Index, and Common Neighbors.
+    \item \textbf{Graph Representation Learning}: Original DeepWalk (uniform random walks) and Node2Vec (hyperparameter biased walks).
+\end{enumerate}
+Experiments will be carried out on three standard real-world social graphs: Cora, Citeseer, and Facebook Social circles. Each configuration will be repeated 10 times to report average values.

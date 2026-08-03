@@ -1,0 +1,10 @@
+% ************************** Thesis Abstract *****************************
+% Use `abstract' as an option in the document class to print only the titlepage and the abstract.
+
+\begin{abstract}
+Predicting missing or future links in complex networks, known as link prediction, is a fundamental task in social network analysis, recommendation systems, and bioinformatics. Traditional heuristic methods rely entirely on local neighborhood similarity metrics but fail to capture long-range topological relationships. On the other hand, network representation learning models, such as DeepWalk, successfully learn continuous vector embeddings by simulating random walks, but typically adopt uniform transition probabilities, which ignores the local clustering structures of networks.
+
+To address these limitations, this thesis proposes a Jaccard-weighted random walk graph representation framework for link prediction. We define a parameterized transitional probability guided by neighbor-wise Jaccard similarity. By introducing a structural smoothing factor, the model can balance local clustering exploitation and global topological exploration. Node embeddings are trained via the Skip-gram model and evaluated on binary link classification tasks. Experimental results on standard benchmark datasets (Cora, Citeseer, and Facebook) show that our proposed similarity-weighted random walk framework consistently outperforms original DeepWalk and traditional heuristic baselines under AUC-ROC and Average Precision (AP) metrics. \newline
+\\
+\textbf{Keywords: } \textit{Link Prediction, Social Networks, Network Representation Learning, Node Similarity}
+\end{abstract}
