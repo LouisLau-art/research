@@ -1,12 +1,14 @@
-# 独立仓库，排除（在 https://github.com/LouisLau-art/link-prediction）
-link-prediction/
-
 # Python
 __pycache__/
 *.py[cod]
 .venv/
+/.venv-doc/
 *.egg-info/
 
 # 系统文件
 .DS_Store
 Thumbs.db
+
+# 与仓库根目录的 Git LFS 原始压缩包逐字节相同；这里仅保留本地下载缓存。
+/docs/school.zip
+/docs/school/JI-thesis-template-2025.zip

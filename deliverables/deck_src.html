@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>中期答辩 · 基于网络表示学习与节点结构相似度的社交网络链路预测研究</title>
+<style>
+:root{
+  --ink:#0f172a; --muted:#475569; --faint:#94a3b8;
+  --indigo:#4f46e5; --indigo-soft:#eef2ff; --indigo-line:#c7d2fe;
+  --amber:#d97706; --amber-soft:#fffbeb; --amber-line:#fde68a;
+  --green:#059669; --green-soft:#ecfdf5;
+  --rose:#e11d48;
+  --bg:#eef1f7; --panel:#ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:A4 landscape;margin:0}
+html,body{height:100%}
+body{
+  font-family:'Inter','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+  background:var(--bg); color:var(--ink);
+  overflow:hidden; height:100vh; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; -webkit-font-smoothing:antialiased;
+}
+#deck{position:relative;width:100%;max-width:1400px;height:100%;max-height:860px;
+  display:flex;justify-content:center;align-items:center;perspective:1400px}
+.slide{
+  position:absolute;width:100%;height:100%;
+  background:linear-gradient(150deg,#fff 0%,#f8fafc 100%);
+  border:1px solid rgba(15,23,42,.06); border-radius:20px;
+  padding:30px 46px 24px;
+  box-shadow:0 18px 44px rgba(15,23,42,.10),inset 0 1px 0 #fff;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transform:translate3d(0,18px,0) scale(.985);
+  transition:opacity .45s ease,transform .45s cubic-bezier(.25,.8,.25,1);
+}
+.slide.active{opacity:1;pointer-events:auto;transform:none;z-index:10}
+
+/* ── header ── */
+.hd{display:flex;align-items:flex-start;gap:15px;padding-bottom:11px;
+  border-bottom:2px solid #eef2f7;margin-bottom:16px;flex:0 0 auto}
+.hd .bar{width:6px;height:38px;border-radius:3px;
+  background:linear-gradient(to bottom,var(--indigo),#818cf8);margin-top:3px;flex:0 0 auto}
+.hd h2{font-size:30px;font-weight:800;letter-spacing:-.4px;line-height:1.22}
+.hd .sub{font-size:14px;color:var(--faint);margin-top:3px;letter-spacing:.3px}
+.hd .no{margin-left:auto;font-family:'SF Mono',ui-monospace,monospace;
+  font-size:24px;font-weight:700;color:var(--indigo);opacity:.3;padding-top:2px}
+
+/* ── cover ── */
+.cover{justify-content:center;align-items:flex-start;padding-left:92px;
+  background:radial-gradient(1100px 620px at 88% 12%,#eef2ff 0%,transparent 62%),
+             linear-gradient(150deg,#fff 0%,#f6f8fc 100%)}
+.cover .eyebrow{font-size:14px;letter-spacing:5px;color:var(--indigo);font-weight:700;margin-bottom:20px}
+.cover h1{font-size:44px;font-weight:800;line-height:1.34;max-width:1020px;
+  letter-spacing:-.8px;color:#0f172a}
+.cover .en{font-size:16px;color:var(--faint);margin-top:12px;font-style:italic;max-width:940px;line-height:1.55}
+.cover .rule{width:240px;height:6px;border-radius:3px;margin:26px 0;
+  background:linear-gradient(to right,var(--indigo),var(--amber))}
+.cover .meta{display:grid;grid-template-columns:repeat(2,auto);gap:10px 62px;font-size:16px;color:var(--muted)}
+.cover .meta b{color:var(--ink);font-weight:650;margin-left:8px}
+
+/* ── layout ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-2.wide-l{grid-template-columns:1.28fr 1fr}
+.grid-2.wide-r{grid-template-columns:1fr 1.3fr}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.col{display:flex;flex-direction:column;gap:12px;min-height:0}
+
+.card{background:var(--panel);border:1.5px solid #e6ebf3;border-radius:13px;
+  padding:15px 19px;box-shadow:0 4px 16px rgba(148,163,184,.10);min-height:0}
+.card .t{font-size:18px;font-weight:750;color:var(--indigo);margin-bottom:8px;
+  display:flex;align-items:center;gap:8px}
+.card .t.warm{color:var(--amber)}
+.card p,.card li{font-size:14.5px;line-height:1.68;color:#1e293b}
+.card ul{margin-left:19px}
+.card li{margin-bottom:5px}
+.card li::marker{color:var(--indigo-line)}
+
+/* ── figure ── */
+.fig{background:#fff;border:1.5px solid #e6ebf3;border-radius:13px;padding:8px 10px;
+  display:flex;align-items:center;justify-content:center;min-height:0;
+  box-shadow:0 4px 16px rgba(148,163,184,.10)}
+.fig svg{width:100%;height:100%;max-height:100%;display:block}
+.fig.auto{flex:0 0 auto}
+.cap{font-size:12.5px;color:var(--faint);margin-top:6px;text-align:center;line-height:1.5}
+
+/* ── formula ── */
+.formula{background:#f5f7fe;border:1.5px dashed var(--indigo);border-radius:11px;
+  padding:13px 16px;font-family:'SF Mono',ui-monospace,monospace;font-size:18.5px;
+  color:#1e3a8a;text-align:center;line-height:1.5;white-space:nowrap;overflow:hidden}
+.formula small{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;
+  font-family:'Inter','PingFang SC',sans-serif;white-space:normal}
+
+/* ── table ── */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:#f4f6fb;color:#334155;font-weight:700;padding:7px 9px;text-align:left;
+  border-bottom:1.5px solid #e2e8f0;font-size:12.8px;letter-spacing:.2px}
+td{padding:6px 9px;border-bottom:1px solid #eef2f7;color:#1e293b}
+tr.hl td{background:var(--indigo-soft);font-weight:700;color:#3730a3}
+tr.dim td{color:var(--faint)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;
+  font-family:'SF Mono',ui-monospace,monospace}
+.mono{font-family:'SF Mono',ui-monospace,monospace}
+
+/* ── kpi ── */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:#fff;border:1.5px solid #e6ebf3;border-radius:11px;padding:10px 14px}
+.kpi .k{font-size:12px;color:var(--faint);letter-spacing:.5px;font-weight:600}
+.kpi .v{font-size:22px;font-weight:800;color:var(--ink);margin-top:2px;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi .n{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+/* ── callout ── */
+.callout{border-left:5px solid var(--amber);background:var(--amber-soft);
+  border-radius:0 10px 10px 0;padding:12px 17px;font-size:14.5px;line-height:1.66;color:#78350f}
+.callout.blue{border-color:var(--indigo);background:var(--indigo-soft);color:#1e1b4b}
+.callout.green{border-color:var(--green);background:var(--green-soft);color:#064e3b}
+.callout b{font-weight:750}
+.callout .inner,.card .inner{width:100%}
+
+/* ── steps ── */
+.steps{display:flex;flex-direction:column;gap:9px;flex:1 1 auto;min-height:0}
+.step{display:grid;grid-template-columns:88px 1fr 210px;gap:16px;align-items:center;
+  background:#fff;border:1.5px solid #e6ebf3;border-radius:11px;padding:10px 16px;
+  flex:1 1 auto}
+.step .when{font-family:'SF Mono',ui-monospace,monospace;font-size:14px;
+  font-weight:700;color:var(--indigo)}
+.step .what b{font-size:15px;font-weight:750}
+.step .what p{font-size:13.5px;color:var(--muted);line-height:1.55;margin-top:2px}
+.step .out{font-size:13px;color:#4338ca;background:var(--indigo-soft);
+  border:1px solid var(--indigo-line);border-radius:8px;padding:6px 10px;line-height:1.45;
+  align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.step .out b{display:block;font-size:10.5px;letter-spacing:1px;color:#818cf8;margin-bottom:2px}
+.step.hot{border-color:var(--indigo-line);background:#f8faff}
+
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;
+  border-radius:999px;letter-spacing:.3px;vertical-align:middle}
+.tag.g{background:var(--green-soft);color:#047857;border:1px solid #a7f3d0}
+.tag.a{background:var(--amber-soft);color:#b45309;border:1px solid var(--amber-line)}
+.tag.r{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}
+.tag.i{background:var(--indigo-soft);color:#4338ca;border:1px solid var(--indigo-line)}
+
+.controls{position:fixed;bottom:16px;right:20px;display:flex;gap:8px;z-index:99}
+.controls button{border:1px solid #cbd5e1;background:#fff;color:#475569;border-radius:8px;
+  width:34px;height:34px;font-size:15px;cursor:pointer}
+.controls button:hover{background:#f1f5f9}
+.hint{position:fixed;bottom:20px;left:22px;font-size:12px;color:#94a3b8;z-index:99}
+
+/* ══ print ══ */
+@media print{
+  body{background:#fff;overflow:visible;height:auto;display:block;cursor:default}
+  #deck{max-width:100%;height:auto;max-height:none;perspective:none;display:block}
+  .slide{position:relative;opacity:1!important;transform:none!important;
+    pointer-events:auto!important;width:100%;height:100vh;
+    page-break-after:always;break-after:page;border:none;border-radius:0;
+    box-shadow:none;padding:30px 46px 24px}
+  .controls,.hint{display:none!important}
+  .card,.fig{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div id="deck">
+<!-- ═══ 1 封面 ═══ -->
+<section class="slide cover active">
+  <div class="eyebrow">学位论文中期答辩 · THESIS PROGRESS REVIEW</div>
+  <h1>基于网络表示学习与节点结构相似度的<br>社交网络链路预测研究</h1>
+  <div class="en">Research on Link Prediction in Social Networks based on
+    Network Representation Learning and Node Structural Similarity</div>
+  <div class="rule"></div>
+  <div class="meta">
+    <div>汇报人<b>刘新宇</b></div>
+    <div>导师<b>崔建群 教授</b></div>
+    <div>华师学号<b>2025124630</b></div>
+    <div>伍伦贡学号<b>1086182</b></div>
+    <div>专业<b>计算机科学</b></div>
+    <div>开题时间<b>2026 年 7 月 7 日</b></div>
+  </div>
+</section>
+
+<!-- ═══ 2 汇报框架 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>汇报框架</h2><div class="sub">对照开题计划，汇报 4 个月的进展、发现的问题与下一步安排</div></div>
+    <div class="no">02</div></div>
+  <div class="grid-2" style="flex:1 1 auto;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="card"><div class="t">① 进度总览</div>
+      <p>开题制定的 6 个阶段，目前已完成的、正在做的、还没做的分别是什么</p></div>
+    <div class="card"><div class="t">② 已完成的工作</div>
+      <p>实验平台、三个数据集的基线复现、加权随机游走的实现与超参分析</p></div>
+    <div class="card"><div class="t">③ 三个关键发现</div>
+      <p>单次实验的结论不可靠 → 评估协议本身在奖励「度数」→
+        修正协议后，我原来的方法优势消失了</p></div>
+    <div class="card"><div class="t">④ 问题与计划</div>
+      <p>目前卡在哪里、打算怎么解，以及确保按期完成论文的时间安排</p></div>
+  </div>
+</section>
+
+<!-- ═══ 3 进度总览 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>一、按开题计划推进的情况</h2>
+      <div class="sub">Phase 1–2 已按期完成 · 当前处于 Phase 3（第 5–6 个月）</div></div>
+    <div class="no">03</div></div>
+  <div class="fig" style="flex:1 1 auto;min-height:230px;padding:4px 10px"><!--FIG:fig6_gantt.svg--></div>
+  <div class="grid-2" style="flex:0 0 auto;margin-top:14px;gap:16px;align-items:stretch">
+    <div class="callout green" style="align-self:stretch">
+      <b>进度结论：按计划进行，没有滞后。</b><br>
+      开题计划的 Phase 1（文献综述 + 环境搭建 + 数据预处理）与 Phase 2（基线实现 + 三数据集实验）
+      均已完成，并提前进入 Phase 3 的算法设计与超参分析。</div>
+    <div class="callout blue" style="align-self:stretch">
+      <b>有一处顺序调整需向老师说明：</b><br>
+      开题方案中的加权游走是「Jaccard 系数 × Node2Vec 偏置 α(t,x)」的联合形式。
+      为隔离变量，前期先实现了不含 p/q 的 <span class="mono">Jaccard-DeepWalk</span> 版本；
+      <span class="mono">Jaccard-Node2Vec</span> 联合版本已于本月补齐。
+      属实现顺序调整，不改变研究内容与目标。</div>
+  </div>
+</section>
+
+<!-- ═══ 4 实验平台与基线复现 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>二、实验平台与基线复现</h2>
+      <div class="sub">一条可复现的完整管道，7 种方法 × 3 个公开数据集</div></div>
+    <div class="no">04</div></div>
+
+  <div class="grid-2 wide-l" style="flex:1 1 auto;gap:16px;align-items:stretch">
+
+    <div class="col" style="flex:1 1 auto">
+      <div class="card" style="flex:1 1 auto">
+        <div class="t">实验管道 <span class="tag g">已完成</span></div>
+        <table>
+          <tr><th style="width:22%">步骤</th><th>做法</th></tr>
+          <tr><td>① 数据</td><td>SNAP 公开数据：Cora / Citeseer 引文网、Facebook 社交网</td></tr>
+          <tr><td>② 划分</td><td>随机藏起 20% 的边作为正样本；等量采样不存在的边作负样本（1:1）</td></tr>
+          <tr><td>③ 采样</td><td>在剩余 80% 的图上做加权随机游走，生成节点序列</td></tr>
+          <tr><td>④ 嵌入</td><td>Skip-gram（word2vec）训练，维度 d=64，窗口 5，每点 10 条、长 40</td></tr>
+          <tr><td>⑤ 分类</td><td>Hadamard 积 → 逻辑回归 → 用 AUC-ROC 评价</td></tr>
+          <tr><td>⑥ 重复</td><td>同一配置换 10 个随机划分，报告均值±标准差 + 配对显著性检验</td></tr>
+        </table>
+        <div class="cap" style="text-align:left;margin-top:10px">代码：私有仓库
+          <span class="mono">link-prediction</span>（Python + networkx / gensim / scikit-learn），全流程可复现</div>
+      </div>
+      <div class="card" style="flex:0 0 auto">
+        <div class="t warm">超参消融（Cora，5 次划分）</div>
+        <p style="font-size:13.2px">
+          · 嵌入维度 d：16→0.756，32→0.784，<b>64→0.798</b>，128→0.798（64 后饱和）<br>
+          · 游走长度 l：10→0.793，20→0.794，<b>40→0.799</b>，80→0.795（影响 &lt; 0.006）<br>
+          说明瓶颈不在采样规模，在权重设计本身</p>
+      </div>
+    </div>
+
+    <div class="col" style="flex:1 1 auto">
+      <div class="card" style="flex:0 0 auto">
+        <div class="t">三个数据集</div>
+        <table>
+          <tr><th>数据集</th><th class="num">节点</th><th class="num">边</th><th class="num">平均度</th></tr>
+          <tr><td>Cora</td><td class="num">2 708</td><td class="num">5 278</td><td class="num">3.9</td></tr>
+          <tr><td>Citeseer</td><td class="num">3 312</td><td class="num">4 660</td><td class="num">2.8</td></tr>
+          <tr><td>Facebook</td><td class="num">4 039</td><td class="num">88 234</td><td class="num">43.7</td></tr>
+        </table>
+        <div class="cap" style="text-align:left;margin-top:8px">Citeseer 平均度仅 2.8，是三者中最稀疏的图</div>
+      </div>
+      <div class="card" style="flex:1 1 auto">
+        <div class="t warm">已复现的 7 种方法</div>
+        <p style="font-size:13.8px;line-height:1.85">
+          <b>启发式 3 种</b>：共同邻居 CN、Jaccard 系数、Adamic-Adar<br>
+          <b>表示学习 3 种</b>：DeepWalk、Node2Vec（BFS 型 / DFS 型）<br>
+          <b style="color:var(--indigo)">本文方法 1 种：结构相似度加权随机游走</b></p>
+        <div class="cap" style="text-align:left;margin-top:10px">全部方法在同一套划分、同一套负样本、
+          同一个分类器下比较，排除实现差异带来的干扰</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 5 算法 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>三、加权随机游走：设计与实现</h2>
+      <div class="sub">把「局部结构相似度」放到游走的转移概率里，而不是事后融合</div></div>
+    <div class="no">05</div></div>
+
+  <div class="grid-2 wide-r" style="flex:1 1 auto;gap:16px;align-items:stretch">
+
+    <div class="col" style="flex:1 1 auto">
+      <div class="formula" style="flex:0 0 auto">P(v→x) ∝ α(t,x) · w(v,x) · ( s(v,x) + β )<span style="color:var(--amber)">^γ</span>
+        <small>s = 结构相似度（Jaccard / RA / AA）　·　β = 平滑项　·　γ = 锐化指数　·　α = Node2Vec 的 p/q 偏置</small>
+      </div>
+      <div class="card" style="flex:1 1 auto">
+        <div class="t">三个设计要点</div>
+        <ul>
+          <li><b>为什么用结构相似度：</b>除以邻居并集，抵消「明星节点」度数大带来的偏置，
+            比共同邻居数更能反映真实的亲密程度</li>
+          <li><b>为什么加 β：</b>两个相邻节点可能没有共同邻居（s=0）。加 β 后转移概率退化为
+            均匀游走，保证稀疏区域不卡死——鲁棒性由数学形式保证</li>
+          <li><b>融合发生在哪：</b>在游走采样阶段注入，学到的向量本身就带局部结构信息，
+            而不是把两个分数在最后加权平均</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col" style="flex:1 1 auto">
+      <div class="fig" style="flex:1 1 auto;min-height:200px"><!--FIG:fig7_walk_schematic.svg--></div>
+      <div class="callout blue" style="flex:0 0 auto">
+        <b>实现上是可插拔的：</b>相似度指标（Jaccard / RA / AA）、平滑项 β、锐化指数 γ、
+        Node2Vec 偏置 p/q 都是独立参数，换一个指标只改一个参数。
+        正因为可插拔，才能在后面几页系统地做对照实验。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 6 发现① ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>四、关键发现 ①：单次实验的结论不可靠</h2>
+      <div class="sub">开题方案承诺 10 次随机划分并报告标准差——补上这一步，结论翻转了</div></div>
+    <div class="no">06</div></div>
+  <div class="fig" style="flex:1 1 auto;min-height:230px;padding:4px 10px"><!--FIG:fig3_single_vs_repeated.svg--></div>
+  <div class="grid-2" style="flex:0 0 auto;margin-top:14px;gap:16px;align-items:stretch">
+    <div class="callout" style="align-self:stretch">
+      <b>单次划分会给出错误的排名。</b><br>
+      只看 seed=42 那一次：Cora 上本文方法 <b>0.8143</b>，高于 DeepWalk 的 0.8075，看起来方法有效。
+      换成 10 次随机划分取平均：本文 <b>0.7910</b>，DeepWalk 0.7974——<b>方向反了</b>。
+      Citeseer 上单次 0.6696、10 次 0.6542，绝对值差 0.015，比任何方法间差距都大。</div>
+    <div class="callout blue" style="align-self:stretch">
+      <b>原因是划分本身带来的方差很大。</b><br>
+      同一个模型、只换随机划分，AUC 就在 0.775–0.823 之间摆动（σ = 0.009–0.013），
+      而方法之间的差距只有 0.001–0.006。<b>噪声大于信号</b>，因此必须做多种子配对检验
+      （配对 t 检验 + Wilcoxon 符号秩检验）。</div>
+  </div>
+</section>
+
+<!-- ═══ 7 发现② ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>五、关键发现 ②：评估协议本身在奖励「度数」</h2>
+      <div class="sub">进一步追根因，发现问题不在方法，而在大家通用的评估口径</div></div>
+    <div class="no">07</div></div>
+  <div class="fig" style="flex:1 1 auto;min-height:240px;padding:4px 10px"><!--FIG:fig8_protocol_leak.svg--></div>
+  <div class="grid-2" style="flex:0 0 auto;margin-top:13px;gap:16px;align-items:stretch">
+    <div class="callout" style="align-self:stretch">
+      <b>漏洞一 · 随机负样本低估度数。</b><br>
+      真实边天然更可能连接高度节点（优先连接）：Cora 正边度积 76.0 vs 随机负边 17.0（4.5 倍）；
+      Citeseer 54.8 vs 7.8（7 倍）。<b>仅用「度积」一个标量做分类，Cora 就能拿 0.631 AUC</b>。
+      换成度数匹配的负样本后掉到 <b>0.511（等于瞎猜）</b>。</div>
+    <div class="callout blue" style="align-self:stretch">
+      <b>漏洞二 · 向量模长捷径。</b><br>
+      Hadamard 特征幅值随节点频次（≈度数）增长，逻辑回归可以直接用「模长大小」判边。
+      最典型的证据：把 γ 从 1 拉到 8，Citeseer 上 AUC 从 0.654 跳到 <b>0.747</b>，
+      看起来大赢；但<b>把向量归一化后立刻掉回 0.656</b>——涨的那部分是模长，不是结构。</div>
+  </div>
+</section>
+
+<!-- ═══ 8 修正后的真实排名 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>六、修正协议后的真实排名</h2>
+      <div class="sub">B 协议 = 度数匹配负样本 + 单位归一化向量 · 同样 10 个划分、同样配对检验</div></div>
+    <div class="no">08</div></div>
+  <div class="fig" style="flex:1 1 auto;min-height:250px;padding:4px 10px"><!--FIG:fig9_ab_ranking.svg--></div>
+  <div class="grid-3" style="flex:0 0 auto;margin-top:12px">
+    <div class="card" style="padding:11px 16px">
+      <div class="t" style="font-size:15px;color:var(--green);margin-bottom:5px">① 表示学习确实赢了启发式 ✓</div>
+      <p style="font-size:13.3px">修正后 Cora +0.1015、Citeseer +0.0459（均 10/10 胜，p &lt; 0.0001）。
+        原来「稀疏图上嵌入不如 CN」的结论<b>是协议缺陷造成的，不成立</b>。</p>
+    </div>
+    <div class="card" style="padding:11px 16px">
+      <div class="t" style="font-size:15px;color:var(--amber);margin-bottom:5px">② 我的方法 vs DeepWalk：打平</div>
+      <p style="font-size:13.3px">Cora：0.8004 vs 0.8001（p=0.85）；Citeseer：0.6963 vs 0.6973（p=0.43）。
+        Jaccard / RA / AA 三种加权<b>全部无法与 DeepWalk 区分</b>。</p>
+    </div>
+    <div class="card" style="padding:11px 16px">
+      <div class="t" style="font-size:15px;color:var(--rose);margin-bottom:5px">③ 差异同时被压缩</div>
+      <p style="font-size:13.3px">标准差普遍收窄：Cora 上 node2vec-DFS 0.0130→0.0104，
+        Citeseer 上 DeepWalk 0.0091→0.0072。原协议下部分「方法优劣」<b>只是度数噪声</b>。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9 融合位置 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>七、融合位置也试过了</h2>
+      <div class="sub">给结构相似度最后一次机会：不只影响采样，而是作为显式特征与嵌入拼接（混合预测器）</div></div>
+    <div class="no">09</div></div>
+  <div class="fig" style="flex:1 1 auto;min-height:250px;padding:4px 10px"><!--FIG:fig10_hybrid.svg--></div>
+  <div class="grid-2" style="flex:0 0 auto;margin-top:13px;gap:16px;align-items:stretch">
+    <div class="callout" style="align-self:stretch">
+      <b>三种输入 × 2 数据集 × 2 协议，共 8 组对照</b>——同一批划分、同一批负样本、同一个分类器。<br>
+      仅结构（H）独打：Cora ≈0.70、Citeseer ≈0.65，明显弱于嵌入；混合（M）相比仅嵌入（E）
+      最多涨 <b>+0.0008</b>，Citeseer 修正协议下反而 <b>−0.0004</b>。
+      个别组 p&lt;0.01 统计显著，但幅度小于单模型换一次划分的摆动——<b>实际意义为零</b>。</div>
+    <div class="callout blue" style="align-self:stretch">
+      <b>为什么没有增益：信息冗余。</b><br>
+      采样阶段注入的局部结构已被 skip-gram 从游走序列学过一遍，CN / Jaccard / AA / RA 四个分数与
+      Hadamard 特征高度共线，分类器第二次拿到同一份信息榨不出新东西。
+      逻辑回归是线性模型，特征拼接是「两路分数事后加权」的超集——<b>线性模型下的所有融合位置，
+      得到的都是同一个负结果。</b></div>
+  </div>
+</section>
+
+<!-- ═══ 10 结论与问题 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>八、结论、存在的问题与解决方案</h2>
+      <div class="sub">三条结论都已被两套独立协议验证；每条问题都对应定位到的证据</div></div>
+    <div class="no">10</div></div>
+  <div class="col" style="flex:1 1 auto;gap:10px">
+    <div class="callout green" style="flex:0 0 auto">
+      <b>阶段结论：</b>① 结构相似度加权随机游走<b>在机制上是成立的</b>——它把局部结构信息
+      真正注入到了采样过程；② 但在 Cora 与 Citeseer 上，它<b>并没有带来可测量的增益</b>；
+      ③ 文献里大量「0.5%–1% 提升」的结论，很可能被今天这两类协议缺陷抬高了。
+      <b>这第三条是本次中期最想汇报的发现。</b></div>
+    <div class="card" style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center">
+      <div class="t" style="font-size:16px">问题 1 · 加权方案没有可测量增益 <span class="tag g">已收口</span></div>
+      <p>证据：A/B 两套协议下 Jaccard、RA、AA 三种加权均与 DeepWalk 无差异（p=0.41–0.85）；
+        换到特征级融合（混合预测器，相似度作显式特征）同样无增益——8 组对照最大 +0.0008，
+        部分显著但幅度不足单次划分摆动的一半。「换融合位置」这条出路已排除。<br>
+        <b>方案：</b>论文主线正式定为「<b>结构先验注入的边界条件 + 评估协议纠偏</b>」——
+        负结果本身作为贡献，不再寻找「更强加权方案」。</p>
+    </div>
+    <div class="card" style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center">
+      <div class="t" style="font-size:16px">问题 2 · 评估协议缺陷尚未系统量化 <span class="tag a">已定位</span></div>
+      <p>证据：随机负样本让「度积」单特征拿到 0.631（Cora）；度数匹配后掉到 0.511。
+        但这只是 2 个数据集、2 类缺陷，尚未形成一套可复用的评估成套方法。<br>
+        <b>方案：</b>把 B 协议（度数匹配负样本 + 单位归一化 + 配对检验）整理成完整评测脚本，
+        在 Facebook、DBLP 上复现；补 Hits@K / MRR 等排序指标。</p>
+    </div>
+    <div class="card" style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center">
+      <div class="t" style="font-size:16px">问题 3 · 数据集覆盖不足 <span class="tag r">待处理</span></div>
+      <p>证据：Facebook 上所有方法都在 0.986–0.991，方法间差异小于噪声，失去区分度；
+        仅用 2 个可用数据集不足以支撑「边界条件」这类结论。<br>
+        <b>方案：</b>补 DBLP 合作网（中等密度）与 Twitter ego 网络，覆盖从稀疏到稠密的密度区间。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 11 下一步计划 ═══ -->
+<section class="slide">
+  <div class="hd"><div class="bar"></div>
+    <div><h2>九、下一步工作计划</h2>
+      <div class="sub">按开题 Phase 3–6 推进，时间节点不变；内容按上面三条结论调整</div></div>
+    <div class="no">11</div></div>
+  <div class="steps">
+    <div class="step hot"><div class="when">2026.11</div>
+      <div class="what"><b>方法定稿 <span class="tag i">进行中</span></b>
+        <p>混合预测器已验证（无增益，采样/特征两级都排除）→ 4 数据集 × 双协议复核 → 主线锁定「负结果 + 方法学纠偏」</p></div>
+      <div class="out"><b>产出</b>主线定稿 + 双协议结果表</div></div>
+    <div class="step"><div class="when">2026.12</div>
+      <div class="what"><b>完整实验矩阵</b>
+        <p>4 数据集 × 10 方法 × 10 划分 × 2 协议；补网络密度/聚类系数对增益的影响分析</p></div>
+      <div class="out"><b>产出</b>实验矩阵 + 显著性报告</div></div>
+    <div class="step"><div class="when">2027.1–2</div>
+      <div class="what"><b>撰写论文主体</b>
+        <p>引言、相关工作、方法、实验、讨论五章；英文撰写，按 JI 的 LaTeX 模板</p></div>
+      <div class="out"><b>产出</b>论文 1–5 章</div></div>
+    <div class="step"><div class="when">2027.3</div>
+      <div class="what"><b>完成初稿并提交导师审阅</b>
+        <p>同期提交《学位论文初稿审核意见表》</p></div>
+      <div class="out"><b>产出</b>完整初稿 v1 + 审核表</div></div>
+    <div class="step"><div class="when">2027.4</div>
+      <div class="what"><b>定稿与答辩准备</b>
+        <p>按导师意见修订、查重与盲审材料准备、答辩演练</p></div>
+      <div class="out"><b>产出</b>定稿 + 答辩材料</div></div>
+  </div>
+</section>
+
+<!-- ═══ 12 致谢 ═══ -->
+<section class="slide cover" style="align-items:flex-start;justify-content:center">
+  <div class="eyebrow">THANK YOU</div>
+  <h1 style="font-size:38px">恳请各位老师批评指正</h1>
+  <div class="rule" style="margin:22px 0"></div>
+  <div class="card" style="max-width:920px">
+    <div class="t">一句话总结这次中期</div>
+    <p style="font-size:14.5px">平台搭好了、基线复现了、方法也实现了。但把它放到 10 次重复实验、两套评估协议和统计检验下，
+      原来看起来成立的提升消失了——后来查明<b>不是方法的问题，是评估口径在奖励度数</b>。
+      <b style="color:var(--indigo)">这四个月最大的收获是：我原来的结论站不住，而我知道它为什么站不住。</b>
+      后续 5 个月按调整后的计划完成实验与论文。</p>
+  </div>
+  <div style="margin-top:20px;font-size:14px;color:var(--muted)">
+    汇报人：刘新宇 · 导师：崔建群 教授 · 2026 年 11 月</div>
+</section>
+
+</div>
+<div class="controls">
+  <button id="prev">‹</button><button id="next">›</button>
+</div>
+<div class="hint">← → 翻页 · F 全屏 · P 打印（A4 横向 PDF）</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let i=0;
+function show(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+}
+show(0);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){show(i+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){show(i-1);e.preventDefault();}
+  if(e.key==='Home')show(0);
+  if(e.key==='End')show(slides.length-1);
+  if(e.key==='f'||e.key==='F'){
+    document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}
+  if(e.key==='p'||e.key==='P')window.print();
+});
+document.getElementById('next').onclick=e=>{e.stopPropagation();show(i+1)};
+document.getElementById('prev').onclick=e=>{e.stopPropagation();show(i-1)};
+document.body.addEventListener('click',e=>{if(!e.target.closest('button'))show(i+1)});
+</script>
+</body>
+</html>

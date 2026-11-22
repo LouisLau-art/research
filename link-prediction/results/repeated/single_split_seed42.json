@@ -1,0 +1,12 @@
+{
+  "cora": {
+    "DeepWalk": 0.8075,
+    "Node2Vec (DFS-like)": 0.823,
+    "Ours (Weighted Walk)": 0.8143
+  },
+  "citeseer": {
+    "DeepWalk": 0.6733,
+    "Node2Vec (DFS-like)": 0.6653,
+    "Ours (Weighted Walk)": 0.6696
+  }
+}
